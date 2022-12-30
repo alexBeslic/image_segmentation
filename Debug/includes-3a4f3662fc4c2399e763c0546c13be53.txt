@@ -1,0 +1,1 @@
+-I"D:/Fax/sistemi za digitalnu obradu signala/projekat/image_segmentation/system"
