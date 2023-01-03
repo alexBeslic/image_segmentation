@@ -8,58 +8,71 @@
 
 #include "image-utils.h"
 
+
+#ifdef _MISRA_2004_RULES
+#pragma diag(push)
+
+#pragma diag(suppress:misra_rule_17_4: \
+"Array indexing shall be the only allowed form of pointer arithmetic")
+#pragma diag(suppress:misra_rule_10_4: \
+"Implicitly converted to a different underlying type")
+
+#endif /* _MISRA_2004_RULES */
+
 /**
- * @brief Reads an .bmp format image and puts it to image variabel.
+ * @brief Reads an .bmp format image and puts it to image variable.
  * 
  * @param fileName File name of the image 
  * @param image Read image
- * @return int if 0 evrery thing is OK, if -1 something whent wrong
+ * @return int if 0 every thing is OK, if -1 something went wrong
  */
 int read_image(char *fileName, IMAGE *image)
 {
 	size_t i;
 	int return_val = 0;
-	short bitsPerPixel = 0;
+	unsigned short bitsPerPixel = 0u;
 	unsigned int dataOffset = 0u;
 	unsigned int paddedRowSize = 0u;
 	unsigned int unpaddedRowSize = 0u;
-	unsigned int totalSize = 0u;
 	float paddedRowSizeTMP;
+	unsigned char reader[4] = {0u};
 
 	FILE *inputFile = fopen(fileName, "r");
 
 	if (inputFile != NULL)
 	{
-		
+
 		/* Reading Pixel Data Offset */
 		fseek(inputFile, DATA_OFFSET_OFFSET, SEEK_SET);
-		fread(&dataOffset, 4u, 1u, inputFile);
+		fread(reader, 1u, 4u, inputFile);
+		dataOffset = (reader[3] << 24u) | (reader[2] << 16u) | (reader[1] << 8u) | reader[0];
 
 		/* Reading Image Width */
 		fseek(inputFile, WIDTH_OFFSET, SEEK_SET);
-		fread(&image->width, 4u, 1u, inputFile);
+		fread(reader, 1u, 4u, inputFile);
+		image->width = (reader[3] << 24u) | (reader[2] << 16u) | (reader[1] << 8u) | reader[0];
 
 		/* Reading Image Height */
 		fseek(inputFile, HEIGHT_OFFSET, SEEK_SET);
-		fread(&image->height, 4u, 1u, inputFile);
+		fread(reader, 1u, 4u, inputFile);
+		image->height = (reader[3] << 24u) | (reader[2] << 16u) | (reader[1] << 8u) | reader[0];
 
 		/* Reading The number of bits per pixel */
 		fseek(inputFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
-		fread(&bitsPerPixel, 2u, 1u, inputFile);
+		fread(reader, 1u, 2u, inputFile);
+		bitsPerPixel = (reader[1] << 8u) | reader[0];
+
 		image->bytesPerPixel = ((unsigned int)bitsPerPixel) / 8u;
 
 		paddedRowSizeTMP = (4.0f * (float)ceil((float)(image->width) / 4.0f));
 		paddedRowSize = (unsigned int)paddedRowSizeTMP * image->bytesPerPixel;
 		unpaddedRowSize = (image->width)*(image->bytesPerPixel);
-		totalSize = unpaddedRowSize*(image->height);
 
-
-		(image->pixels) = (unsigned char *)malloc(totalSize);
-		unsigned char *currentRowPointer = image->pixels+((image->height-1)*unpaddedRowSize);
+		unsigned char *currentRowPointer = image->pixels+((image->height-1u)*unpaddedRowSize);
 
 		for (i = 0u; i < image->height; ++i)
 		{
-			fseek(inputFile, dataOffset+(i*paddedRowSize), SEEK_SET);
+			fseek(inputFile, (i*paddedRowSize) + dataOffset, SEEK_SET);
 			fread(currentRowPointer, 1u, unpaddedRowSize, inputFile);
 			currentRowPointer -= unpaddedRowSize;
 		}
@@ -70,8 +83,16 @@ int read_image(char *fileName, IMAGE *image)
 		/* Something went wrong */
 		return_val = -1;
 	}
-	
+
 	return 0;
+}
+
+void getBytesToWrite(unsigned char array[4], unsigned int whatTowrite)
+{
+	array[0] = whatTowrite & 0xFFu;
+	array[1] = (whatTowrite >> 8)  & 0xFFu;
+	array[2] = (whatTowrite >> 16) & 0xFFu;
+	array[3] = (whatTowrite >> 24) & 0xFFu;
 }
 
 /**
@@ -85,6 +106,7 @@ int write_image(char *fileName, IMAGE *image)
 {
 	size_t i;
 	int return_val = 0;
+	unsigned char writer[4] = {0u};
 	/* File info */
 	const char BM[] = "BM";
 	float paddedRowSizeTMP = (4.0f * (float)ceil((float) image->width/4.0f));
@@ -95,7 +117,7 @@ int write_image(char *fileName, IMAGE *image)
 
 	/* Header info */
 	unsigned int infoHeaderSize = INFO_HEADER_SIZE;
-	short planes = 1; /* always 1 */
+	unsigned short planes = 1u; /* always 1 */
 	unsigned int bitsPerPixel = image->bytesPerPixel * 8u;
 
 	unsigned int compression = NO_COMPRESION;
@@ -115,26 +137,53 @@ int write_image(char *fileName, IMAGE *image)
 		/* Write file info */
 		fwrite(&BM[0], 1u, 1u, outputFile);
 		fwrite(&BM[1], 1u, 1u, outputFile);
-		fwrite(&fileSize, 4u, 1u, outputFile);
-		fwrite(&reserved, 4u, 1u, outputFile);
-		fwrite(&dataOffset, 4u, 1u, outputFile);
+
+		getBytesToWrite(writer, fileSize);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, reserved);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, dataOffset);
+		fwrite(writer, 1u, 4u, outputFile);
 
 		/* Write header info */
-		fwrite(&infoHeaderSize, 4u, 1u, outputFile);
-		fwrite(&image->width, 4u, 1u, outputFile);
-		fwrite(&image->height, 4u, 1u, outputFile);
-		fwrite(&planes, 2u, 1u, outputFile);
-		fwrite(&bitsPerPixel, 2u, 1u, outputFile);
+		getBytesToWrite(writer, infoHeaderSize);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, image->width);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, image->height);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		writer[0] = planes & 0xFFu;
+		writer[1] = (planes >> 8) & 0xFFu;
+		fwrite(writer, 1u, 2u, outputFile);
+
+		writer[0] = bitsPerPixel & 0xFFu;
+		writer[1] = (bitsPerPixel >> 8) & 0xFFu;
+		fwrite(writer, 1u, 2u, outputFile);
 
 		/* Write compression */
-		fwrite(&compression, 4u, 1u, outputFile);
+		getBytesToWrite(writer, compression);
+		fwrite(writer, 1u, 4u, outputFile);
 
 		/* Write image size (in bytes) */
-		fwrite(&imageSize, 4u, 1u, outputFile);
-		fwrite(&resolutionX, 4u, 1u, outputFile);
-		fwrite(&resolutionY, 4u, 1u, outputFile);
-		fwrite(&colorsUsed, 4u, 1u, outputFile);
-		fwrite(&importantColors, 4u, 1u, outputFile);
+		getBytesToWrite(writer, imageSize);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, resolutionX);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, resolutionY);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, colorsUsed);
+		fwrite(writer, 1u, 4u, outputFile);
+
+		getBytesToWrite(writer, importantColors);
+		fwrite(writer, 1u, 4u, outputFile);
 
 		/* Write pixels to file */
 		for (i = 0u; i < image->height; ++i)
@@ -172,7 +221,7 @@ void convert_to_grayscale(IMAGE *originalImage, IMAGE *grayscaleImage)
 	for (i = 0u; i < imageSize; ++i)
 	{
 		/* Grayscale conversiony 0.11*B + 0.59*G + 0.3*R */
-		grayscaleImage->pixels[i] = (unsigned int) (0.11f * originalImage->pixels[i*onePixel] + 0.59f * originalImage->pixels[i*onePixel + 1] + 0.3f * originalImage->pixels[i*onePixel + 2]);
+		grayscaleImage->pixels[i] = (unsigned char) (0.11f * originalImage->pixels[i*onePixel] + 0.59f * originalImage->pixels[i*onePixel + 1u] + 0.3f * originalImage->pixels[i*onePixel + 2u]);
 	}
 
 }
@@ -273,32 +322,30 @@ void color_segments(IMAGE *input, IMAGE *output)
 }
 
 /**
- * @brief Codes an image, evrey closed contour gets its own code
+ * @brief Codes an image, every closed contour gets its own code
  * 
  * @param image input
  */
-void code_segments(IMAGE *image) {
+void code_segments(IMAGE *image, unsigned char *codes) {
 	size_t i, j;
-    unsigned int width = image->width;
-    unsigned int height = image->height;
-    unsigned int next_code = 1u;
-    unsigned int *codes = calloc(width * height, sizeof(unsigned int));
+	unsigned int width = image->width;
+	unsigned int height = image->height;
+	unsigned int next_code = 1u;
 
 	/* Check if the pixel is empty and if that pixel isn't already color  then calls flood fill function */
-    for (i = 0u; i < height; i++) {
-        for (j = 0u; j < width; j++) {
-            if ((image->pixels[i * width + j] == 0u) && (codes[i * width + j] == 0u)) {
-                flood_fill(image, j, i, next_code, codes);
-                next_code = (next_code + 1u) % NUM_COLORS;
-            }
-        }
-    }
+	for (i = 0u; i < height; i++) {
+		for (j = 0u; j < width; j++) {
+			if ((image->pixels[i * width + j] == 0u) && (codes[i * width + j] == 0u)) {
+				flood_fill(image, j, i, next_code, codes);
+				next_code = (next_code + 1u) % NUM_COLORS;
+			}
+		}
+	}
 
-    /* Assign the color codes to the image */
-    for (i = 0u; i < width*height; i++) {
-        image->pixels[i] = codes[i];
-    }
-    free(codes);
+	/* Assign the color codes to the image */
+	for (i = 0u; i < width*height; i++) {
+		image->pixels[i] = codes[i];
+	}
 }
 
 /**
@@ -310,10 +357,10 @@ void code_segments(IMAGE *image) {
  * @param color current color code
  * @param codes array of previous codet pixels
  */
-void flood_fill(IMAGE *image, unsigned int x, unsigned int y, unsigned int color, unsigned int *codes) {
+void flood_fill(IMAGE *image, unsigned int x, unsigned int y, unsigned int color, unsigned char *codes) {
     int i, j, xx, yy;
-	int width = image->width;
-    int height = image->height;
+	unsigned int width = image->width;
+    unsigned int height = image->height;
     unsigned char *pixels = image->pixels;
     int front = 0, rear = 0;
     int queue[width*height][2];
@@ -344,145 +391,9 @@ void flood_fill(IMAGE *image, unsigned int x, unsigned int y, unsigned int color
     }
 }
 
-/**
- * @brief Reads an .bmp format image and puts it to image varibel.
- * Pixel array needs to be preallocated.
- * 
- * @param fileName File name of the image 
- * @param image Read image
- * @return int if 0 evrery thing is OK, if -1 something whent wrong
- */
-int read_image_dsp(char *fileName, IMAGE *image)
-{
-	size_t i;
-	int return_val = 0;
-	short bitsPerPixel = 0;
-	unsigned int dataOffset = 0u;
-	unsigned int paddedRowSize = 0u;
-	unsigned int unpaddedRowSize = 0u;
-	unsigned int totalSize = 0u;
-	float paddedRowSizeTMP;
-
-	FILE *inputFile = fopen(fileName, "r");
-
-	if (inputFile != NULL)
-	{
-
-		/* Reading Pixel Data Offset */
-		fseek(inputFile, DATA_OFFSET_OFFSET, SEEK_SET);
-		fread(&dataOffset, 4u, 1u, inputFile);
-
-		/* Reading Image Width */
-		fseek(inputFile, WIDTH_OFFSET, SEEK_SET);
-		fread(&image->width, 4u, 1u, inputFile);
-
-		/* Reading Image Height */
-		fseek(inputFile, HEIGHT_OFFSET, SEEK_SET);
-		fread(&image->height, 4u, 1u, inputFile);
-
-		/* Reading The number of bits per pixel */
-		fseek(inputFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
-		fread(&bitsPerPixel, 2u, 1u, inputFile);
-		image->bytesPerPixel = ((unsigned int)bitsPerPixel) / 8u;
-
-		paddedRowSizeTMP = (4.0f * (float)ceil((float)(image->width) / 4.0f));
-		paddedRowSize = (unsigned int)paddedRowSizeTMP * image->bytesPerPixel;
-		unpaddedRowSize = (image->width)*(image->bytesPerPixel);
-		totalSize = unpaddedRowSize*(image->height);
-
-
-		(image->pixels) = (unsigned char *)malloc(totalSize);
-		unsigned char *currentRowPointer = image->pixels+((image->height-1)*unpaddedRowSize);
-
-		for (i = 0u; i < image->height; ++i)
-		{
-			fseek(inputFile, dataOffset+(i*paddedRowSize), SEEK_SET);
-			fread(currentRowPointer, 1u, unpaddedRowSize, inputFile);
-			currentRowPointer -= unpaddedRowSize;
-		}
-
-		fclose(inputFile);
-	} else
-	{
-		/* Something went wrong */
-		return_val = -1;
-	}
-
-	return 0;
-}
-
-
-int write_image_dsp(char *fileName, IMAGE *image)
-{
-	size_t i;
-	/* File info */
-	const char BM[] = "BM";
-	unsigned int paddedRowSize = (unsigned int)(4 * ceil((float) image->width/4.0f))*image->bytesPerPixel;
-	unsigned int fileSize = paddedRowSize*image->height + HEADER_SIZE + INFO_HEADER_SIZE;
-	unsigned int reserved = 0x0000u;
-	unsigned int dataOffset = HEADER_SIZE+INFO_HEADER_SIZE;
-
-	/* Header info */
-	unsigned int infoHeaderSize = INFO_HEADER_SIZE;
-	short planes = 1; /* always 1 */
-	unsigned int bitsPerPixel = image->bytesPerPixel * 8u;
-
-	unsigned int compression = NO_COMPRESION;
-
-	/* Image properties */
-	unsigned int imageSize = image->width * image->height * image->bytesPerPixel;
-	unsigned int resolutionX = 11811u; /* 300 dpi */
-	unsigned int resolutionY = 11811u; /* 300 dpi */
-	unsigned int colorsUsed = MAX_NUMBER_OF_COLORS;
-	unsigned int importantColors = ALL_COLORS_REQUIRED;
-
-	unsigned int unpaddedRowSize = image->width * image->bytesPerPixel;
-
-	FILE *outputFile = fopen(fileName, "w");
-
-	if (outputFile == NULL) {
-		return -1;
-	}
-
-	/* Write file info */
-	fwrite(&BM[0], 1u, 1u, outputFile);
-	fwrite(&BM[1], 1u, 1u, outputFile);
-	fwrite(&fileSize, 4u, 1u, outputFile);
-	fwrite(&reserved, 4u, 1u, outputFile);
-	fwrite(&dataOffset, 4u, 1u, outputFile);
-
-	/* Write header info */
-	fwrite(&infoHeaderSize, 4u, 1u, outputFile);
-	fwrite(&image->width, 4u, 1u, outputFile);
-	fwrite(&image->height, 4u, 1u, outputFile);
-	fwrite(&planes, 2u, 1u, outputFile);
-	fwrite(&bitsPerPixel, 2u, 1u, outputFile);
-
-	/* Write compression */
-	fwrite(&compression, 4u, 1u, outputFile);
-
-	/* Write image size (in bytes) */
-	fwrite(&imageSize, 4u, 1u, outputFile);
-	fwrite(&resolutionX, 4u, 1u, outputFile);
-	fwrite(&resolutionY, 4u, 1u, outputFile);
-	fwrite(&colorsUsed, 4u, 1u, outputFile);
-	fwrite(&importantColors, 4u, 1u, outputFile);
-
-	/* Write pixels to file */
-	for (i = 0u; i < image->height; ++i)
-	{
-			unsigned int pixelOffset = ((image->height - i) - 1u)*unpaddedRowSize;
-			fwrite(&image->pixels[pixelOffset], 1u, paddedRowSize, outputFile);
-	}
-
-	fclose(outputFile);
-
-	return 0;
-}
-
 void convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage)
 {
-	size_t i = 0u;
+	size_t i = 0u, ii;
 	unsigned int imageSize =  originalImage->height * originalImage->width;
 	unsigned int onePixel = originalImage->bytesPerPixel;
 	unsigned char sumRGB;
@@ -491,13 +402,16 @@ void convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage)
 	grayscaleImage->width = originalImage->width;
 	grayscaleImage->bytesPerPixel = 1u;
 
-	#pragma SIMD_for
-	for (i = 0u; i < imageSize; ++i*onePixel)
+//#pragma vector_for (16)
+//	#pragma SIMD_for
+	for (i = 0u; i < imageSize; ++i)
 	{
-		sumRGB = originalImage->pixels[i];
-		sumRGB += originalImage->pixels[i + 1u];
-		sumRGB += originalImage->pixels[i + 2u];
+		ii = i * onePixel;
+		sumRGB = originalImage->pixels[ii];
+		sumRGB += originalImage->pixels[ii + 1u];
+		sumRGB += originalImage->pixels[ii + 2u];
 		grayscaleImage->pixels[i] = sumRGB / 3u;
+
 	}
 
 }
@@ -516,13 +430,16 @@ void edge_detection_dsp(IMAGE *input, IMAGE *output, char *kernel, unsigned int 
 	output->width = input->width;
 	output->bytesPerPixel = 1u;
 
-	#pragma SIMD_for
+//			#pragma SIMD_for
+#pragma vector_for (3)
 	for(m = 0u; m < k_row; ++m)
 	{
 		mm = k_row - 1u - m; /* row index of flipped kernel */
+
 		for(n = 0u; n < k_col; ++n)
 		{
 			nn = k_col - 1u - n;  /* column index of flipped kernel */
+			//#pragma vector_for (16)
 			for(i = 0u; i < row; ++i)
 			{
 				for(j = 0u; j < column; ++j)
@@ -556,7 +473,7 @@ void color_segments_dsp(IMAGE *input, IMAGE *output)
 	output->bytesPerPixel = 3u;
 
 	/* Coloring each pixel */
-	#pragma SIMD_for
+	//#pragma vector_for (16)
 	for (i = 0u; i < size; i++)
 	{
 		color_index = input->pixels[i];
@@ -565,26 +482,25 @@ void color_segments_dsp(IMAGE *input, IMAGE *output)
 		{
 
 			 /* Setting RGB values */
-			output->pixels[i* onePixel + 2] = C_MASK_R(colors[color_index]);
-			output->pixels[i* onePixel + 1] = C_MASK_G(colors[color_index]);
-			output->pixels[i* onePixel + 0] = C_MASK_B(colors[color_index]);
+			output->pixels[i* onePixel + 2u] = C_MASK_R(colors[color_index]);
+			output->pixels[i* onePixel + 1u] = C_MASK_G(colors[color_index]);
+			output->pixels[i* onePixel + 0u] = C_MASK_B(colors[color_index]);
 		}
 	}
 }
 
 
-void code_segments_dsp(IMAGE *image) {
+void code_segments_dsp(IMAGE *image, unsigned char *codes) {
 	size_t i, j;
 	unsigned int width = image->width;
 	unsigned int height = image->height;
 	unsigned int next_code = 1u;
-	unsigned int *codes = calloc(width * height, sizeof(unsigned int));
 
 	/* Check if the pixel is empty and if that pixel isn't already color  then calls flood fill function */
 	for (i = 0u; i < height; i++) {
 		for (j = 0u; j < width; j++) {
 			if ((image->pixels[i * width + j] == 0u) && (codes[i * width + j] == 0u)) {
-				flood_fill(image, j, i, next_code, codes);
+				flood_fill_dsp(image, j, i, next_code, codes);
 				next_code = (next_code + 1u) % NUM_COLORS;
 			}
 		}
@@ -594,10 +510,9 @@ void code_segments_dsp(IMAGE *image) {
 	for (i = 0u; i < width*height; i++) {
 		image->pixels[i] = codes[i];
 	}
-	free(codes);
 }
 
-void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned int *codes) {
+void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned char *codes) {
     int i, j, xx, yy;
 	unsigned int width = image->width;
     unsigned int height = image->height;
@@ -630,3 +545,7 @@ void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int col
         }
     }
 }
+
+#ifdef _MISRA_2004_RULES
+#pragma diag(pop)
+#endif /* _MISRA_2004_RULES */
