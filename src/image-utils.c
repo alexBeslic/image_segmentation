@@ -322,9 +322,11 @@ void color_segments(IMAGE *input, IMAGE *output)
 }
 
 /**
- * @brief Codes an image, every closed contour gets its own code
+ * @brief Codes an image, every closed contour gets its own code.
+ * Codes are in range of NUM_COLORS
  * 
  * @param image input
+ * @param codes helper array, need to be preallocated with size => width * height
  */
 void code_segments(IMAGE *image, unsigned char *codes) {
 	size_t i, j;
@@ -391,33 +393,46 @@ void flood_fill(IMAGE *image, unsigned int x, unsigned int y, unsigned int color
     }
 }
 
+#pragma const
 void convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage)
 {
 	size_t i = 0u, ii;
 	unsigned int imageSize =  originalImage->height * originalImage->width;
 	unsigned int onePixel = originalImage->bytesPerPixel;
-	unsigned char sumRGB;
+	unsigned char * restrict pixelsO = originalImage->pixels;
+	unsigned char * restrict pixelsG = grayscaleImage->pixels;
+	unsigned char R;
+	unsigned char G;
+	unsigned char B;
 
 	grayscaleImage->height = originalImage->height;
 	grayscaleImage->width = originalImage->width;
 	grayscaleImage->bytesPerPixel = 1u;
 
-//#pragma vector_for (16)
-//	#pragma SIMD_for
+//    #pragma no_vectorization
 	for (i = 0u; i < imageSize; ++i)
 	{
-		ii = i * onePixel;
-		sumRGB = originalImage->pixels[ii];
-		sumRGB += originalImage->pixels[ii + 1u];
-		sumRGB += originalImage->pixels[ii + 2u];
-		grayscaleImage->pixels[i] = sumRGB / 3u;
+		B = pixelsO[i * onePixel];
+		G = pixelsO[i * onePixel + 1u];
+		R = pixelsO[i * onePixel + 2u];
+		pixelsG[i] = (R + G + B) / 3u;
 
 	}
-
 }
 
 
-void edge_detection_dsp(IMAGE *input, IMAGE *output, char *kernel, unsigned int k_row, unsigned int k_col)
+/**
+ * @brief Used for edge detection using 2D convolution method
+ * Optimized version
+ *
+ * @param input Image
+ * @param output Image (pixel array needs to be preallocated)
+ * @param kernel array
+ * @param k_row number of rows in the kernel
+ * @param k_col number of columns in the kernel
+ */
+#pragma const
+void edge_detection_dsp(IMAGE *input, IMAGE *output, char * restrict kernel, unsigned int k_row, unsigned int k_col)
 {
 	size_t i, j, n, m;
 	unsigned int mm, nn, ii, jj;
@@ -425,21 +440,22 @@ void edge_detection_dsp(IMAGE *input, IMAGE *output, char *kernel, unsigned int 
 	unsigned int row = input->height;
 	unsigned int centerX = k_col / 2u;
 	unsigned int centerY = k_row / 2u;
+	unsigned char * restrict pixelsI = input->pixels;
+	unsigned char * restrict pixelsO = output->pixels;
 
 	output->height = input->height;
 	output->width = input->width;
 	output->bytesPerPixel = 1u;
 
-//			#pragma SIMD_for
-#pragma vector_for (3)
+	#pragma vector_for
 	for(m = 0u; m < k_row; ++m)
 	{
 		mm = k_row - 1u - m; /* row index of flipped kernel */
 
+		#pragma vector_for
 		for(n = 0u; n < k_col; ++n)
 		{
 			nn = k_col - 1u - n;  /* column index of flipped kernel */
-			//#pragma vector_for (16)
 			for(i = 0u; i < row; ++i)
 			{
 				for(j = 0u; j < column; ++j)
@@ -449,23 +465,34 @@ void edge_detection_dsp(IMAGE *input, IMAGE *output, char *kernel, unsigned int 
 					jj = j + (centerX - nn);
 
 					/* ignore input samples which are out of bound */
-					if((ii < row) && (jj < column))
-						output->pixels[i*column + j] += input->pixels[ii * column + jj] * kernel[mm * k_col + nn];
+					if(expected_true((ii < row) && (jj < column)))
+						pixelsO[i*column + j] += pixelsI[ii * column + jj] * kernel[mm * k_col + nn];
 				}
 			}
 		}
 	}
 }
 
+
+/**
+ * @brief Color an image based on the code in that pixel
+ *
+ * @param input image that has been already coded
+ * @param output image
+ */
+#pragma const
 void color_segments_dsp(IMAGE *input, IMAGE *output)
 {
+	/* Array of colors */
 	unsigned int colors[] = {COLOR_1, COLOR_2, COLOR_3, COLOR_4,
 								COLOR_5, COLOR_6, COLOR_7, COLOR_8,
 								COLOR_9, COLOR_10};
-	size_t i;
+	size_t i,ii;
 	unsigned int size = input->height * input->width;
 	unsigned int color_index = 0u;
 	unsigned int onePixel = output->bytesPerPixel;
+	unsigned char * restrict pixelsI = input->pixels;
+	unsigned char * restrict pixelsO = output->pixels;
 
 	/* Initialize the output image */
 	output->height = input->height;
@@ -473,72 +500,91 @@ void color_segments_dsp(IMAGE *input, IMAGE *output)
 	output->bytesPerPixel = 3u;
 
 	/* Coloring each pixel */
-	//#pragma vector_for (16)
 	for (i = 0u; i < size; i++)
 	{
-		color_index = input->pixels[i];
+		color_index = pixelsI[i];
 
 		if (expected_true(color_index < NUM_COLORS))
 		{
-
-			 /* Setting RGB values */
-			output->pixels[i* onePixel + 2u] = C_MASK_R(colors[color_index]);
-			output->pixels[i* onePixel + 1u] = C_MASK_G(colors[color_index]);
-			output->pixels[i* onePixel + 0u] = C_MASK_B(colors[color_index]);
+			/* Setting RGB values */
+			pixelsO[i * onePixel]      = C_MASK_B(colors[color_index]);
+			pixelsO[i * onePixel + 1u] = C_MASK_G(colors[color_index]);
+			pixelsO[i * onePixel + 2u] = C_MASK_R(colors[color_index]);
 		}
 	}
 }
 
-
-void code_segments_dsp(IMAGE *image, unsigned char *codes) {
+/**
+ * @brief Codes an image, every closed contour gets its own code.
+ * Codes are in range of NUM_COLORS.
+ * Optimized version.
+ *
+ * @param image input
+ * @param codes helper array, need to be preallocated with size => width * height
+ */
+#pragma const
+void code_segments_dsp(IMAGE *image, unsigned char * restrict codes, int *queue[2]) {
 	size_t i, j;
 	unsigned int width = image->width;
 	unsigned int height = image->height;
+	unsigned int size = width * height;
 	unsigned int next_code = 1u;
+	unsigned char * restrict pixels = image->pixels;
+
 
 	/* Check if the pixel is empty and if that pixel isn't already color  then calls flood fill function */
+
+	#pragma vector_for
 	for (i = 0u; i < height; i++) {
 		for (j = 0u; j < width; j++) {
-			if ((image->pixels[i * width + j] == 0u) && (codes[i * width + j] == 0u)) {
-				flood_fill_dsp(image, j, i, next_code, codes);
+			if (expected_true((pixels[i * width + j] == 0u) && (codes[i * width + j] == 0u))) {
+				flood_fill_dsp(image, j, i, next_code, codes, queue);
 				next_code = (next_code + 1u) % NUM_COLORS;
 			}
 		}
 	}
 
+//	__builtin_aligned(image->pixels, 2);
+//	__builtin_aligned(codes, 2);
+
 	/* Assign the color codes to the image */
-	for (i = 0u; i < width*height; i++) {
-		image->pixels[i] = codes[i];
+	#pragma SIMD_for
+	for (i = 0u; i < size; i++) {
+		pixels[i] = codes[i];
 	}
 }
-
-void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned char *codes) {
+#pragma const
+void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned char * restrict codes, int *queue[2]) {
     int i, j, xx, yy;
 	unsigned int width = image->width;
     unsigned int height = image->height;
-    unsigned char *pixels = image->pixels;
-    int front = 0, rear = 0;
-    int queue[width*height][2];
-    queue[rear][0] = x;
-    queue[rear][1] = y;
+    unsigned char * restrict pixels = image->pixels;
+    int front = 0;
+    int rear = 0;
+    int currentX;
+    int currentY;
+
+    queue[0][rear] = x;
+    queue[1][rear] = y;
     rear++;
     codes[y * width + x] = color;
 
+	#pragma vector_for
     while (front != rear) {
-        int currentX = queue[front][0];
-        int currentY = queue[front][1];
+        currentX = queue[0][front];
+        currentY = queue[1][front];
         front++;
         for (i = -1; i <= 1; i++) {
             for (j = -1; j <= 1; j++) {
                 xx = currentX + i;
                 yy = currentY + j;
-                if (((xx < 0) || (xx >= width)) || ((yy < 0) || (yy >= height))) {
+                if  (expected_false(((xx < 0) || (xx >= width)) || ((yy < 0) || (yy >= height)))) {
                     continue;
                 }
-                if ((pixels[yy * width + xx] == 0u) && (codes[yy * width + xx] == 0u)) {
+                if (expected_true((pixels[yy * width + xx] == 0u) && (codes[yy * width + xx] == 0u))) {
                     codes[yy * width + xx] = color;
-                    queue[rear][0] = xx;
-                    queue[rear][1] = yy;
+                    queue[0][rear] = xx;
+                    queue[1][rear] = yy;
                     rear++;
                 }
             }
