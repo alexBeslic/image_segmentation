@@ -1,4 +1,6 @@
+"src/image-utils.doj"
 "src/image_segmentation.doj"
+"src/led.doj"
 "system/adi_initialize.doj"
 "system/sru/sru_config.doj"
 "system/startup_ldf/app_IVT.doj"

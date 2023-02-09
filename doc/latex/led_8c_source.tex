@@ -1,0 +1,89 @@
+\doxysection{led.\+c}
+\label{led_8c_source}\index{src/led.c@{src/led.c}}
+\textbf{ Go to the documentation of this file.}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ led.c}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ 03.01.2023.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ Aleksandar\ Bešli?}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ \ \ \ \ email:\ beslic.alex@gmail.com}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}led.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ init\_led(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{/*\ LED01\ */}}
+\DoxyCodeLine{00019\ \ \ \ \ SRU(HIGH,DPI\_PBEN06\_I);}
+\DoxyCodeLine{00020\ \ \ \ \ SRU(FLAG4\_O,DPI\_PB06\_I);}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{/*\ LED02\ */}}
+\DoxyCodeLine{00022\ \ \ \ \ SRU(HIGH,DPI\_PBEN13\_I);}
+\DoxyCodeLine{00023\ \ \ \ \ SRU(FLAG5\_O,DPI\_PB13\_I);}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{/*\ LED03\ */}}
+\DoxyCodeLine{00025\ \ \ \ \ SRU(HIGH,DPI\_PBEN14\_I);}
+\DoxyCodeLine{00026\ \ \ \ \ SRU(FLAG6\_O,DPI\_PB14\_I);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{/*\ LED04\ */}}
+\DoxyCodeLine{00028\ \ \ \ \ SRU(HIGH,DAI\_PBEN03\_I);}
+\DoxyCodeLine{00029\ \ \ \ \ SRU(HIGH,DAI\_PB03\_I);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{/*\ LED05\ */}}
+\DoxyCodeLine{00031\ \ \ \ \ SRU(HIGH,DAI\_PBEN04\_I);}
+\DoxyCodeLine{00032\ \ \ \ \ SRU(HIGH,DAI\_PB04\_I);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{/*\ LED06\ */}}
+\DoxyCodeLine{00034\ \ \ \ \ SRU(HIGH,DAI\_PBEN15\_I);}
+\DoxyCodeLine{00035\ \ \ \ \ SRU(HIGH,DAI\_PB15\_I);}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{/*\ LED07\ */}}
+\DoxyCodeLine{00037\ \ \ \ \ SRU(HIGH,DAI\_PBEN16\_I);}
+\DoxyCodeLine{00038\ \ \ \ \ SRU(HIGH,DAI\_PB16\_I);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{/*\ LED08\ */}}
+\DoxyCodeLine{00040\ \ \ \ \ SRU(HIGH,DAI\_PBEN17\_I);}
+\DoxyCodeLine{00041\ \ \ \ \ SRU(HIGH,DAI\_PB17\_I);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{/*\ Setting\ flag\ pins\ as\ outputs\ */}}
+\DoxyCodeLine{00044\ \ \ \ \ sysreg\_bit\_set(sysreg\_FLAGS,\ (FLG4O|FLG5O|FLG6O)\ );}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{/*\ Setting\ HIGH\ to\ flag\ pins\ */}}
+\DoxyCodeLine{00046\ \ \ \ \ sysreg\_bit\_set(sysreg\_FLAGS,\ (FLG4|FLG5|FLG6)\ );}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{/*\ Turn\ off\ LEDs\ */}}
+\DoxyCodeLine{00049\ \ \ \ \ sysreg\_bit\_clr(sysreg\_FLAGS,\ FLG4);}
+\DoxyCodeLine{00050\ \ \ \ \ sysreg\_bit\_clr(sysreg\_FLAGS,\ FLG5);}
+\DoxyCodeLine{00051\ \ \ \ \ sysreg\_bit\_clr(sysreg\_FLAGS,\ FLG6);}
+\DoxyCodeLine{00052\ \ \ \ \ SRU(LOW,DAI\_PB03\_I);}
+\DoxyCodeLine{00053\ \ \ \ \ SRU(LOW,DAI\_PB04\_I);}
+\DoxyCodeLine{00054\ \ \ \ \ SRU(LOW,DAI\_PB15\_I);}
+\DoxyCodeLine{00055\ \ \ \ \ SRU(LOW,DAI\_PB16\_I);}
+\DoxyCodeLine{00056\ \ \ \ \ SRU(LOW,DAI\_PB17\_I);}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{void}\ status\_led(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ what\_led)}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordflow}{switch}\ (what\_led)}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{case}\ READING\_DONE:}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ sysreg\_bit\_set(sysreg\_FLAGS,\ FLG4);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{case}\ GRAY\_SCALE\_DONE:}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ sysreg\_bit\_set(sysreg\_FLAGS,\ FLG5);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{case}\ EDGE\_DETECT\_DONE:}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ sysreg\_bit\_set(sysreg\_FLAGS,\ FLG6);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{case}\ CODING\_DONE:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ SRU(HIGH,DAI\_PB03\_I);}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{case}\ COLORING\_DONE:}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ SRU(HIGH,DAI\_PB04\_I);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{case}\ WRITING\_DONE:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ SRU(HIGH,DAI\_PB15\_I);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ }
+
+\end{DoxyCode}

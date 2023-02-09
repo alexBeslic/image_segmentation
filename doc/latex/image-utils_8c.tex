@@ -1,0 +1,1006 @@
+\doxysection{src/image-\/utils.c File Reference}
+\label{image-utils_8c}\index{src/image-\/utils.c@{src/image-\/utils.c}}
+
+
+Image utility functions.  
+
+
+{\ttfamily \#include \char`\"{}image-\/utils.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \textbf{ read\+\_\+image} (char $\ast$file\+Name, \textbf{ IMAGE} $\ast$image)
+\begin{DoxyCompactList}\small\item\em Reads an .bmp format image and puts it to image variable. \end{DoxyCompactList}\item 
+void \textbf{ prep\+\_\+for\+\_\+writing} (\textbf{ IMAGE} $\ast$input, \textbf{ IMAGE} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Preps an image for writing. \end{DoxyCompactList}\item 
+unsigned int \textbf{ get\+\_\+bytes\+\_\+to\+\_\+read} (unsigned char array[4])
+\begin{DoxyCompactList}\small\item\em Converts a 4 element array to a singel 4B value. \end{DoxyCompactList}\item 
+void \textbf{ get\+\_\+bytes\+\_\+to\+\_\+write} (unsigned char array[4], unsigned int what\+Towrite)
+\begin{DoxyCompactList}\small\item\em Converts a 4B value to an array of 4 elements. \end{DoxyCompactList}\item 
+int \textbf{ write\+\_\+image} (char $\ast$file\+Name, \textbf{ IMAGE} $\ast$image)
+\begin{DoxyCompactList}\small\item\em Writes the image in a .bmp format. \end{DoxyCompactList}\item 
+void \textbf{ convert\+\_\+to\+\_\+grayscale} (\textbf{ IMAGE} $\ast$original\+Image, \textbf{ IMAGE} $\ast$grayscale\+Image)
+\begin{DoxyCompactList}\small\item\em Converts the image to gray scale using Luminosity Method. \end{DoxyCompactList}\item 
+void \textbf{ edge\+\_\+detection} (\textbf{ IMAGE} $\ast$input, \textbf{ IMAGE} $\ast$output, char $\ast$kernel, unsigned int k\+\_\+row, unsigned int k\+\_\+col)
+\begin{DoxyCompactList}\small\item\em Used for edge detection using 2D convolution method. Note\+: It can be used for other operation not just edge detection, it only depends on what kernel is providet. \end{DoxyCompactList}\item 
+void \textbf{ color\+\_\+pixel} (unsigned char $\ast$pixels, unsigned int color\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Colors one pixel by with color detriment by color index. \end{DoxyCompactList}\item 
+void \textbf{ color\+\_\+segments} (\textbf{ IMAGE} $\ast$input, \textbf{ IMAGE} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Color an image based on the code in that pixel. \end{DoxyCompactList}\item 
+void \textbf{ code\+\_\+segments} (\textbf{ IMAGE} $\ast$image, unsigned char $\ast$codes, int $\ast$queue[2])
+\begin{DoxyCompactList}\small\item\em Codes an image, every closed contour gets its own code. Codes are in range of NUM\+\_\+\+COLORS. \end{DoxyCompactList}\item 
+void \textbf{ flood\+\_\+fill} (\textbf{ IMAGE} $\ast$image, unsigned int x, unsigned int y, unsigned int color, unsigned char $\ast$codes, int $\ast$queue[2])
+\begin{DoxyCompactList}\small\item\em Uses BFS algoritam to give each pixel in a closed contour unique color code. \end{DoxyCompactList}\item 
+void \textbf{ convert\+\_\+to\+\_\+grayscale\+\_\+dsp} (\textbf{ IMAGE} $\ast$original\+Image, \textbf{ IMAGE} $\ast$grayscale\+Image)
+\begin{DoxyCompactList}\small\item\em Converts the image to gray scale using average method Optimized version. \end{DoxyCompactList}\item 
+void \textbf{ edge\+\_\+detection\+\_\+dsp} (\textbf{ IMAGE} $\ast$input, \textbf{ IMAGE} $\ast$output, char $\ast$restrict kernel, unsigned int k\+\_\+row, unsigned int k\+\_\+col)
+\begin{DoxyCompactList}\small\item\em Used for edge detection using 2D convolution method Note\+: It can be used for other operation not just edge detection, it only depends on what kernel is providet. Optimized version. \end{DoxyCompactList}\item 
+void \textbf{ color\+\_\+segments\+\_\+dsp} (\textbf{ IMAGE} $\ast$input, \textbf{ IMAGE} $\ast$output)
+\begin{DoxyCompactList}\small\item\em Color an image based on the code in that pixel Optimized version. \end{DoxyCompactList}\item 
+void \textbf{ code\+\_\+segments\+\_\+dsp} (\textbf{ IMAGE} $\ast$image, unsigned char $\ast$restrict codes, int $\ast$queue[2])
+\begin{DoxyCompactList}\small\item\em Codes an image, every closed contour gets its own code. Codes are in range of NUM\+\_\+\+COLORS. Optimized version. \end{DoxyCompactList}\item 
+void \textbf{ flood\+\_\+fill\+\_\+dsp} (\textbf{ IMAGE} $\ast$image, unsigned int x, unsigned int y, unsigned int color, unsigned char $\ast$restrict codes, int $\ast$queue[2])
+\begin{DoxyCompactList}\small\item\em Uses BFS algoritam to give each pixel in a closed contour unique color code Optimized version. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Image utility functions. 
+
+\begin{DoxyAuthor}{Author}
+Aleksandar Beslic ({\texttt{ beslic.\+alex@gmail.\+com}}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/01-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2023 
+\end{DoxyCopyright}
+
+
+Definition in file \textbf{ image-\/utils.\+c}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{image-utils_8c_a0c3902d5e609ce53f3884056184aba89}} 
+\index{image-\/utils.c@{image-\/utils.c}!code\_segments@{code\_segments}}
+\index{code\_segments@{code\_segments}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{code\_segments()}
+{\footnotesize\ttfamily void code\+\_\+segments (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{image,  }\item[{unsigned char $\ast$}]{codes,  }\item[{int $\ast$}]{queue[2] }\end{DoxyParamCaption})}
+
+
+
+Codes an image, every closed contour gets its own code. Codes are in range of NUM\+\_\+\+COLORS. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & input \\
+\hline
+{\em codes} & helper array, (need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 395} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00396\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,\ j;}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ image-\/>width;}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ height\ =\ image-\/>height;}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ width*height;}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ next\_code\ =\ 1u;}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ height;\ i++)\ }
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 0u;\ j\ <\ width;\ j++)\ }
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Check\ if\ the\ pixel\ is\ empty\ and\ if\ that\ pixel\ isn't\ already\ color\ \ then\ calls\ flood\ fill\ function\ */}}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((image-\/>pixels[i\ *\ width\ +\ j]\ ==\ 0u)\ \&\&\ (codes[i\ *\ width\ +\ j]\ ==\ 0u))\ }
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flood\_fill(image,\ j,\ i,\ next\_code,\ codes,\ queue);}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ next\_code\ =\ (next\_code\ +\ 1u)\ \%\ NUM\_COLORS;}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00414\ \ \ \ \ \}}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{comment}{/*\ Assign\ the\ color\ codes\ to\ the\ image\ */}}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ i++)\ }
+\DoxyCodeLine{00418\ \ \ \ \ \{}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ image-\/>pixels[i]\ =\ codes[i];}
+\DoxyCodeLine{00420\ \ \ \ \ \}}
+\DoxyCodeLine{00421\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_afe5845eb3e6ff0bace183a1f6ce57d67}} 
+\index{image-\/utils.c@{image-\/utils.c}!code\_segments\_dsp@{code\_segments\_dsp}}
+\index{code\_segments\_dsp@{code\_segments\_dsp}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{code\_segments\_dsp()}
+{\footnotesize\ttfamily void code\+\_\+segments\+\_\+dsp (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{image,  }\item[{unsigned char $\ast$restrict}]{codes,  }\item[{int $\ast$}]{queue[2] }\end{DoxyParamCaption})}
+
+
+
+Codes an image, every closed contour gets its own code. Codes are in range of NUM\+\_\+\+COLORS. Optimized version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & input \\
+\hline
+{\em codes} & helper array, need to be preallocated with size =$>$ width $\ast$ height \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 615} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00616\ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,\ j;}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ image-\/>width;}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ height\ =\ image-\/>height;}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ width\ *\ height;}
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ next\_code\ =\ 1u;}
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixels\ =\ image-\/>pixels;}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ vector\_for }}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ height;\ i++)\ }
+\DoxyCodeLine{00626\ \ \ \ \ \{}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ 0u;\ j\ <\ width;\ j++)\ }
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Check\ if\ the\ pixel\ is\ empty\ and\ if\ that\ pixel\ isn't\ already\ color\ \ then\ calls\ flood\ fill\ function\ */}}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (expected\_true((pixels[i\ *\ width\ +\ j]\ ==\ 0u)\ \&\&\ (codes[i\ *\ width\ +\ j]\ ==\ 0u)))}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flood\_fill\_dsp(image,\ j,\ i,\ next\_code,\ codes,\ queue);}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ next\_code\ =\ (next\_code\ +\ 1u)\ \%\ NUM\_COLORS;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00636\ \ \ \ \ \}}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{comment}{/*\ Assign\ the\ color\ codes\ to\ the\ image\ */}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ SIMD\_for }}
+\DoxyCodeLine{00640\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ i++)\ }
+\DoxyCodeLine{00641\ \ \ \ \ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ pixels[i]\ =\ codes[i];}
+\DoxyCodeLine{00643\ \ \ \ \ \}}
+\DoxyCodeLine{00644\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a2f54c39e61cc3f188ec5b3ada7632e85}} 
+\index{image-\/utils.c@{image-\/utils.c}!color\_pixel@{color\_pixel}}
+\index{color\_pixel@{color\_pixel}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{color\_pixel()}
+{\footnotesize\ttfamily void color\+\_\+pixel (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{pixels,  }\item[{unsigned int}]{color\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Colors one pixel by with color detriment by color index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixels} & to be colored \\
+\hline
+{\em color\+\_\+index} & in range of NUM\+\_\+\+COLORS \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 345} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00346\ \{}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ colors[]\ =\ \{COLOR\_1,\ COLOR\_2,\ COLOR\_3,\ COLOR\_4,}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ COLOR\_5,\ COLOR\_6,\ COLOR\_7,\ COLOR\_8,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ COLOR\_9,\ COLOR\_10\};}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ \ \textcolor{comment}{/*\ Setting\ RGB\ values\ */}}
+\DoxyCodeLine{00352\ \ \ \ \ pixels[0]\ =\ C\_MASK\_B(colors[color\_index]);}
+\DoxyCodeLine{00353\ \ \ \ \ pixels[1]\ =\ C\_MASK\_G(colors[color\_index]);}
+\DoxyCodeLine{00354\ \ \ \ \ pixels[2]\ =\ C\_MASK\_R(colors[color\_index]);}
+\DoxyCodeLine{00355\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a26338f8e90d17d00f531c22cac0f2a92}} 
+\index{image-\/utils.c@{image-\/utils.c}!color\_segments@{color\_segments}}
+\index{color\_segments@{color\_segments}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{color\_segments()}
+{\footnotesize\ttfamily void color\+\_\+segments (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{input,  }\item[{\textbf{ IMAGE} $\ast$}]{output }\end{DoxyParamCaption})}
+
+
+
+Color an image based on the code in that pixel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & image that has been already codet \\
+\hline
+{\em output} & image (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 363} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i;}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ input-\/>height\ *\ input-\/>width;}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ color\_index\ =\ 0u;}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ onePixel\ =\ output-\/>bytesPerPixel;}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00371\ \ \ \ \ output-\/>height\ =\ input-\/>height;}
+\DoxyCodeLine{00372\ \ \ \ \ output-\/>width\ =\ input-\/>width;}
+\DoxyCodeLine{00373\ \ \ \ \ output-\/>bytesPerPixel\ =\ 3u;}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{comment}{/*\ Colors\ each\ pixel*/}}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ i++)}
+\DoxyCodeLine{00377\ \ \ \ \ \{}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ color\_index\ =\ input-\/>pixels[i];}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (color\_index\ <\ NUM\_COLORS)}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ -\/1\ because\ color\_index\ starts\ from\ 1\ but\ the\ color\_pixel\ function\ start\ indexing\ from\ 0\ */}\ }
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ color\_pixel(\&output-\/>pixels[i\ *\ onePixel],\ color\_index\ -\/\ 1u);}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00385\ \ \ \ \ \}}
+\DoxyCodeLine{00386\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a09305e985b71cc1c8301c01f49a91cf6}} 
+\index{image-\/utils.c@{image-\/utils.c}!color\_segments\_dsp@{color\_segments\_dsp}}
+\index{color\_segments\_dsp@{color\_segments\_dsp}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{color\_segments\_dsp()}
+{\footnotesize\ttfamily void color\+\_\+segments\+\_\+dsp (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{input,  }\item[{\textbf{ IMAGE} $\ast$}]{output }\end{DoxyParamCaption})}
+
+
+
+Color an image based on the code in that pixel Optimized version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & image that has been already coded \\
+\hline
+{\em output} & image (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 573} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00574\ \{}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{comment}{/*\ Array\ of\ colors\ */}}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ colors[]\ =\ \{COLOR\_1,\ COLOR\_2,\ COLOR\_3,\ COLOR\_4,}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ COLOR\_5,\ COLOR\_6,\ COLOR\_7,\ COLOR\_8,}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ COLOR\_9,\ COLOR\_10\};}
+\DoxyCodeLine{00579\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,ii;}
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ input-\/>height\ *\ input-\/>width;}
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ color\_index\ =\ 0u;}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ onePixel\ =\ output-\/>bytesPerPixel;}
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ codes\ =\ input-\/>pixels;}
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixels\ =\ output-\/>pixels;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00587\ \ \ \ \ output-\/>height\ =\ input-\/>height;}
+\DoxyCodeLine{00588\ \ \ \ \ output-\/>width\ =\ input-\/>width;}
+\DoxyCodeLine{00589\ \ \ \ \ output-\/>bytesPerPixel\ =\ 3u;}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{comment}{/*\ Coloring\ each\ pixel\ */}}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ i++)}
+\DoxyCodeLine{00593\ \ \ \ \ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ color\_index\ =\ codes[i];}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (expected\_true(color\_index\ <\ NUM\_COLORS))}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Setting\ RGB\ values\ */}}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ pixels[i\ *\ onePixel]\ \ \ \ \ \ =\ C\_MASK\_B(colors[color\_index]);}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ pixels[i\ *\ onePixel\ +\ 1u]\ =\ C\_MASK\_G(colors[color\_index]);}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ pixels[i\ *\ onePixel\ +\ 2u]\ =\ C\_MASK\_R(colors[color\_index]);}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00603\ \ \ \ \ \}}
+\DoxyCodeLine{00604\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_af135e1431c0a191681c41197210cc8ae}} 
+\index{image-\/utils.c@{image-\/utils.c}!convert\_to\_grayscale@{convert\_to\_grayscale}}
+\index{convert\_to\_grayscale@{convert\_to\_grayscale}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{convert\_to\_grayscale()}
+{\footnotesize\ttfamily void convert\+\_\+to\+\_\+grayscale (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{original\+Image,  }\item[{\textbf{ IMAGE} $\ast$}]{grayscale\+Image }\end{DoxyParamCaption})}
+
+
+
+Converts the image to gray scale using Luminosity Method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em original\+Image} & input image \\
+\hline
+{\em grayscale\+Image} & output image (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 267} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00268\ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0u;}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ \ originalImage-\/>height\ *\ originalImage-\/>width;}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ onePixel\ =\ originalImage-\/>bytesPerPixel;}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00274\ \ \ \ \ grayscaleImage-\/>height\ =\ originalImage-\/>height;}
+\DoxyCodeLine{00275\ \ \ \ \ grayscaleImage-\/>width\ =\ originalImage-\/>width;}
+\DoxyCodeLine{00276\ \ \ \ \ grayscaleImage-\/>bytesPerPixel\ =\ 1u;}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{/*\ Converting\ a\ pixel\ to\ gray\ scale\ */}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ ++i)}
+\DoxyCodeLine{00280\ \ \ \ \ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Grayscale\ conversiony\ 0.11*B\ +\ 0.59*G\ +\ 0.3*R\ */}}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ grayscaleImage-\/>pixels[i]\ =\ (\textcolor{keywordtype}{unsigned}\ char)\ (0.11f\ *\ originalImage-\/>pixels[i*onePixel]\ +\ 0.59f\ *\ originalImage-\/>pixels[i*onePixel\ +\ 1u]\ +\ 0.3f\ *\ originalImage-\/>pixels[i*onePixel\ +\ 2u]);}
+\DoxyCodeLine{00283\ \ \ \ \ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_acee8d1cc8531e00c7a15cdd9e0203fbe}} 
+\index{image-\/utils.c@{image-\/utils.c}!convert\_to\_grayscale\_dsp@{convert\_to\_grayscale\_dsp}}
+\index{convert\_to\_grayscale\_dsp@{convert\_to\_grayscale\_dsp}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{convert\_to\_grayscale\_dsp()}
+{\footnotesize\ttfamily void convert\+\_\+to\+\_\+grayscale\+\_\+dsp (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{original\+Image,  }\item[{\textbf{ IMAGE} $\ast$}]{grayscale\+Image }\end{DoxyParamCaption})}
+
+
+
+Converts the image to gray scale using average method Optimized version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em original\+Image} & input image \\
+\hline
+{\em grayscale\+Image} & output image (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 478} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00479\ \{}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0u;}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ R;}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ G;}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ B;}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ imageSize\ =\ \ originalImage-\/>height\ *\ originalImage-\/>width;}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ onePixel\ =\ originalImage-\/>bytesPerPixel;}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixels\ =\ originalImage-\/>pixels;}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ gray\_pixels\ =\ grayscaleImage-\/>pixels;}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00490\ \ \ \ \ grayscaleImage-\/>height\ =\ originalImage-\/>height;}
+\DoxyCodeLine{00491\ \ \ \ \ grayscaleImage-\/>width\ =\ originalImage-\/>width;}
+\DoxyCodeLine{00492\ \ \ \ \ grayscaleImage-\/>bytesPerPixel\ =\ 1u;}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{comment}{/*\ Converting\ a\ pixel\ to\ gray\ scale\ */}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ no\_vectorization }}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ imageSize;\ ++i)}
+\DoxyCodeLine{00497\ \ \ \ \ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ B\ =\ pixels[i\ *\ onePixel];}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ G\ =\ pixels[i\ *\ onePixel\ +\ 1u];}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ R\ =\ pixels[i\ *\ onePixel\ +\ 2u];}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ gray\_pixels[i]\ =\ (R\ +\ G\ +\ B)\ /\ 3u;}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \ \ \ \ \}}
+\DoxyCodeLine{00504\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a4285e09c30c3d757c74acd69410bd5fb}} 
+\index{image-\/utils.c@{image-\/utils.c}!edge\_detection@{edge\_detection}}
+\index{edge\_detection@{edge\_detection}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{edge\_detection()}
+{\footnotesize\ttfamily void edge\+\_\+detection (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{input,  }\item[{\textbf{ IMAGE} $\ast$}]{output,  }\item[{char $\ast$}]{kernel,  }\item[{unsigned int}]{k\+\_\+row,  }\item[{unsigned int}]{k\+\_\+col }\end{DoxyParamCaption})}
+
+
+
+Used for edge detection using 2D convolution method. Note\+: It can be used for other operation not just edge detection, it only depends on what kernel is providet. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Image \\
+\hline
+{\em output} & Image (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+{\em kernel} & array \\
+\hline
+{\em k\+\_\+row} & number of rows in the kernel \\
+\hline
+{\em k\+\_\+col} & number of columns in the kernel \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 298} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00299\ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,\ j,\ n,\ m;}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ mm,\ nn,\ ii,\ jj;}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ column\ =\ input-\/>width;}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ row\ =\ input-\/>height;}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ centerX\ =\ k\_col\ /\ 2u;}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ centerY\ =\ k\_row\ /\ 2u;}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00308\ \ \ \ \ output-\/>height\ =\ input-\/>height;}
+\DoxyCodeLine{00309\ \ \ \ \ output-\/>width\ =\ input-\/>width;}
+\DoxyCodeLine{00310\ \ \ \ \ output-\/>bytesPerPixel\ =\ 1u;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 0u;\ i\ <\ row;\ ++i)}
+\DoxyCodeLine{00313\ \ \ \ \ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 0u;\ j\ <\ column;\ ++j)}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(m\ =\ 0u;\ m\ <\ k\_row;\ ++m)}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mm\ =\ k\_row\ -\/\ 1u\ -\/\ m;\ \ \textcolor{comment}{/*\ row\ index\ of\ flipped\ kernel\ */}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(n\ =\ 0u;\ n\ <\ k\_col;\ ++n)}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nn\ =\ k\_col\ -\/\ 1u\ -\/\ n;\ \ \textcolor{comment}{/*\ column\ index\ of\ flipped\ kernel\ */}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ of\ input\ signal,\ used\ for\ checking\ boundary\ */}}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ii\ =\ i\ +\ (centerY\ -\/\ mm);}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj\ =\ j\ +\ (centerX\ -\/\ nn);}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ignore\ input\ samples\ which\ are\ out\ of\ bound\ */}}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((ii\ <\ row)\ \&\&\ (jj\ <\ column))}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output-\/>pixels[i*column\ +\ j]\ +=\ input-\/>pixels[ii\ *\ column\ +\ jj]\ *\ kernel[mm\ *\ k\_col\ +\ nn];}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00336\ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_ab85c443782db73f2edcf7b8150307ceb}} 
+\index{image-\/utils.c@{image-\/utils.c}!edge\_detection\_dsp@{edge\_detection\_dsp}}
+\index{edge\_detection\_dsp@{edge\_detection\_dsp}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{edge\_detection\_dsp()}
+{\footnotesize\ttfamily void edge\+\_\+detection\+\_\+dsp (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{input,  }\item[{\textbf{ IMAGE} $\ast$}]{output,  }\item[{char $\ast$restrict}]{kernel,  }\item[{unsigned int}]{k\+\_\+row,  }\item[{unsigned int}]{k\+\_\+col }\end{DoxyParamCaption})}
+
+
+
+Used for edge detection using 2D convolution method Note\+: It can be used for other operation not just edge detection, it only depends on what kernel is providet. Optimized version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & Image \\
+\hline
+{\em output} & Image (pixel array needs to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+{\em kernel} & array \\
+\hline
+{\em k\+\_\+row} & number of rows in the kernel \\
+\hline
+{\em k\+\_\+col} & number of columns in the kernel \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 520} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00521\ \{}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i,\ j,\ n,\ m;}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ mm,\ nn,\ ii,\ jj;}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ column\ =\ input-\/>width;}
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ row\ =\ input-\/>height;}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ centerX\ =\ k\_col\ /\ 2u;}
+\DoxyCodeLine{00527\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ centerY\ =\ k\_row\ /\ 2u;}
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixelsI\ =\ input-\/>pixels;}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixelsO\ =\ output-\/>pixels;}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00532\ \ \ \ \ output-\/>height\ =\ input-\/>height;}
+\DoxyCodeLine{00533\ \ \ \ \ output-\/>width\ =\ input-\/>width;}
+\DoxyCodeLine{00534\ \ \ \ \ output-\/>bytesPerPixel\ =\ 1u;}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ vector\_for }}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{keywordflow}{for}(m\ =\ 0u;\ m\ <\ k\_row;\ ++m)}
+\DoxyCodeLine{00538\ \ \ \ \ \{}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ mm\ =\ k\_row\ -\/\ 1u\ -\/\ m;\ \textcolor{comment}{/*\ row\ index\ of\ flipped\ kernel\ */}}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ vector\_for }}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(n\ =\ 0u;\ n\ <\ k\_col;\ ++n)}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ nn\ =\ k\_col\ -\/\ 1u\ -\/\ n;\ \ \textcolor{comment}{/*\ column\ index\ of\ flipped\ kernel\ */}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 0u;\ i\ <\ row;\ ++i)}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 0u;\ j\ <\ column;\ ++j)}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ of\ input\ signal,\ used\ for\ checking\ boundary\ */}}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ii\ =\ i\ +\ (centerY\ -\/\ mm);}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj\ =\ j\ +\ (centerX\ -\/\ nn);}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ignore\ input\ samples\ which\ are\ out\ of\ bound\ */}}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(expected\_true((ii\ <\ row)\ \&\&\ (jj\ <\ column)))}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pixelsO[i*column\ +\ j]\ +=\ pixelsI[ii\ *\ column\ +\ jj]\ *\ kernel[mm\ *\ k\_col\ +\ nn];}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00561\ \ \ \ \ \}}
+\DoxyCodeLine{00562\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a13c2a8e73ff43cc557dd3823f310f339}} 
+\index{image-\/utils.c@{image-\/utils.c}!flood\_fill@{flood\_fill}}
+\index{flood\_fill@{flood\_fill}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{flood\_fill()}
+{\footnotesize\ttfamily void flood\+\_\+fill (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{image,  }\item[{unsigned int}]{x,  }\item[{unsigned int}]{y,  }\item[{unsigned int}]{color,  }\item[{unsigned char $\ast$}]{codes,  }\item[{int $\ast$}]{queue[2] }\end{DoxyParamCaption})}
+
+
+
+Uses BFS algoritam to give each pixel in a closed contour unique color code. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & input \\
+\hline
+{\em x} & position in image \\
+\hline
+{\em y} & position in image \\
+\hline
+{\em color} & current color code \\
+\hline
+{\em codes} & array of previous codet pixels \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 432} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00433\ \{}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keywordtype}{int}\ i,\ j,\ xx,\ yy;}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ image-\/>width;}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ height\ =\ image-\/>height;}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixels\ =\ image-\/>pixels;}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keywordtype}{int}\ front\ =\ 0;}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keywordtype}{int}\ rear\ =\ 0;}
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keywordtype}{int}\ currentX;}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keywordtype}{int}\ currentY;}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ queue[0][rear]\ =\ x;}
+\DoxyCodeLine{00444\ \ \ \ \ queue[1][rear]\ =\ y;}
+\DoxyCodeLine{00445\ \ \ \ \ rear++;}
+\DoxyCodeLine{00446\ \ \ \ \ codes[y\ *\ width\ +\ x]\ =\ color;}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keywordflow}{while}\ (front\ !=\ rear)\ \{}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ currentX\ =\ queue[0][front];}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ currentY\ =\ queue[1][front];}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ front++;}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ -\/1;\ i\ <=\ 1;\ i++)\ \{}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ -\/1;\ j\ <=\ 1;\ j++)\ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xx\ =\ currentX\ +\ i;}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yy\ =\ currentY\ +\ j;}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (((xx\ <\ 0)\ ||\ (xx\ >=\ width))\ ||\ ((yy\ <\ 0)\ ||\ (yy\ >=\ height)))\ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((pixels[yy\ *\ width\ +\ xx]\ ==\ 0u)\ \&\&\ (codes[yy\ *\ width\ +\ xx]\ ==\ 0u))\ \{}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes[yy\ *\ width\ +\ xx]\ =\ color;}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue[0][rear]\ =\ xx;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue[1][rear]\ =\ yy;}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rear++;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00467\ \ \ \ \ \}}
+\DoxyCodeLine{00468\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a70c40d30df6e3c879ceddd136452c303}} 
+\index{image-\/utils.c@{image-\/utils.c}!flood\_fill\_dsp@{flood\_fill\_dsp}}
+\index{flood\_fill\_dsp@{flood\_fill\_dsp}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{flood\_fill\_dsp()}
+{\footnotesize\ttfamily void flood\+\_\+fill\+\_\+dsp (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{image,  }\item[{unsigned int}]{x,  }\item[{unsigned int}]{y,  }\item[{unsigned int}]{color,  }\item[{unsigned char $\ast$restrict}]{codes,  }\item[{int $\ast$}]{queue[2] }\end{DoxyParamCaption})}
+
+
+
+Uses BFS algoritam to give each pixel in a closed contour unique color code Optimized version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em image} & input \\
+\hline
+{\em x} & position in image \\
+\hline
+{\em y} & position in image \\
+\hline
+{\em color} & current color code \\
+\hline
+{\em codes} & array of previous codet pixels \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 657} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00658\ \{}
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{keywordtype}{int}\ i,\ j,\ xx,\ yy;}
+\DoxyCodeLine{00660\ \ \ \ \ \textcolor{keywordtype}{int}\ currentX,\ currentY;}
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{keywordtype}{int}\ front\ =\ 0,\ rear\ =\ 0;}
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width\ =\ image-\/>width;}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ height\ =\ image-\/>height;}
+\DoxyCodeLine{00664\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixels\ =\ image-\/>pixels;}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \ \ \ \ queue[0][rear]\ =\ x;}
+\DoxyCodeLine{00667\ \ \ \ \ queue[1][rear]\ =\ y;}
+\DoxyCodeLine{00668\ \ \ \ \ rear++;}
+\DoxyCodeLine{00669\ \ \ \ \ codes[y\ *\ width\ +\ x]\ =\ color;}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{keywordflow}{while}\ (front\ !=\ rear)\ }
+\DoxyCodeLine{00672\ \ \ \ \ \{}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ currentX\ =\ queue[0][front];}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ currentY\ =\ queue[1][front];}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ front++;}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ -\/1;\ i\ <=\ 1;\ i++)\ }
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (j\ =\ -\/1;\ j\ <=\ 1;\ j++)\ }
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xx\ =\ currentX\ +\ i;}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yy\ =\ currentY\ +\ j;}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ignore\ out\ of\ bound\ positions\ */}}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \ (expected\_false(((xx\ <\ 0)\ ||\ (xx\ >=\ width))\ ||\ ((yy\ <\ 0)\ ||\ (yy\ >=\ height))))}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (expected\_true((pixels[yy\ *\ width\ +\ xx]\ ==\ 0u)\ \&\&\ (codes[yy\ *\ width\ +\ xx]\ ==\ 0u)))}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ codes[yy\ *\ width\ +\ xx]\ =\ color;}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue[0][rear]\ =\ xx;}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue[1][rear]\ =\ yy;}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rear++;}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00697\ \ \ \ \ \}}
+\DoxyCodeLine{00698\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_abc54dfcab9444670f7bb09303c8fe6c5}} 
+\index{image-\/utils.c@{image-\/utils.c}!get\_bytes\_to\_read@{get\_bytes\_to\_read}}
+\index{get\_bytes\_to\_read@{get\_bytes\_to\_read}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{get\_bytes\_to\_read()}
+{\footnotesize\ttfamily unsigned int get\+\_\+bytes\+\_\+to\+\_\+read (\begin{DoxyParamCaption}\item[{unsigned char}]{array[4] }\end{DoxyParamCaption})}
+
+
+
+Converts a 4 element array to a singel 4B value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em array} & input \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+unsigned int 
+\end{DoxyReturn}
+
+
+Definition at line \textbf{ 133} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{return}\ (array[3]\ <<\ 24u)\ |\ (array[2]\ <<\ 16u)\ |\ (array[1]\ <<\ 8u)\ |\ array[0];}
+\DoxyCodeLine{00136\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a996ba27094be9e799f643fa79b21542d}} 
+\index{image-\/utils.c@{image-\/utils.c}!get\_bytes\_to\_write@{get\_bytes\_to\_write}}
+\index{get\_bytes\_to\_write@{get\_bytes\_to\_write}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{get\_bytes\_to\_write()}
+{\footnotesize\ttfamily void get\+\_\+bytes\+\_\+to\+\_\+write (\begin{DoxyParamCaption}\item[{unsigned char}]{array[4],  }\item[{unsigned int}]{what\+Towrite }\end{DoxyParamCaption})}
+
+
+
+Converts a 4B value to an array of 4 elements. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em array} & output \\
+\hline
+{\em what\+Towrite} & input \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 144} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ array[0]\ =\ whatTowrite\ \&\ 0xFFu;}
+\DoxyCodeLine{00147\ \ \ \ \ array[1]\ =\ (whatTowrite\ >>\ 8)\ \ \&\ 0xFFu;}
+\DoxyCodeLine{00148\ \ \ \ \ array[2]\ =\ (whatTowrite\ >>\ 16)\ \&\ 0xFFu;}
+\DoxyCodeLine{00149\ \ \ \ \ array[3]\ =\ (whatTowrite\ >>\ 24)\ \&\ 0xFFu;}
+\DoxyCodeLine{00150\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a8aa8882ca4c1981931b8b4464c187cb8}} 
+\index{image-\/utils.c@{image-\/utils.c}!prep\_for\_writing@{prep\_for\_writing}}
+\index{prep\_for\_writing@{prep\_for\_writing}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{prep\_for\_writing()}
+{\footnotesize\ttfamily void prep\+\_\+for\+\_\+writing (\begin{DoxyParamCaption}\item[{\textbf{ IMAGE} $\ast$}]{input,  }\item[{\textbf{ IMAGE} $\ast$}]{output }\end{DoxyParamCaption})}
+
+
+
+Preps an image for writing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & edge or gray scale image \\
+\hline
+{\em output} & image ready for writing (pixel array need to be preallocated with size =$>$ width $\ast$ height) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 106} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ input-\/>width\ *\ input-\/>height;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ onePixel\ =\ 3u;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixelsI\ =\ input-\/>pixels;}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ pixelsO\ =\ output-\/>pixels;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ the\ output\ image\ */}}
+\DoxyCodeLine{00115\ \ \ \ \ output-\/>height\ =\ input-\/>height;}
+\DoxyCodeLine{00116\ \ \ \ \ output-\/>width\ =\ input-\/>width;}
+\DoxyCodeLine{00117\ \ \ \ \ output-\/>bytesPerPixel\ =\ onePixel;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ size;\ i++)}
+\DoxyCodeLine{00120\ \ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ pixelsO[i*onePixel]\ =\ pixelsI[i];}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ pixelsO[i*onePixel\ +1u]\ =\ \ pixelsI[i];}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ pixelsO[i*onePixel\ +2u]\ =\ \ pixelsI[i];}
+\DoxyCodeLine{00124\ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_a71b65010c919b9fd61b32242593f3761}} 
+\index{image-\/utils.c@{image-\/utils.c}!read\_image@{read\_image}}
+\index{read\_image@{read\_image}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{read\_image()}
+{\footnotesize\ttfamily int read\+\_\+image (\begin{DoxyParamCaption}\item[{char $\ast$}]{file\+Name,  }\item[{\textbf{ IMAGE} $\ast$}]{image }\end{DoxyParamCaption})}
+
+
+
+Reads an .bmp format image and puts it to image variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & File name of the image \\
+\hline
+{\em image} & Read image (pixel array need to be preallocated) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int if 0 every thing is OK, if -\/1 something went wrong 
+\end{DoxyReturn}
+
+
+Definition at line \textbf{ 38} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ return\_val\ =\ 0;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ bitsPerPixel\ =\ 0u;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dataOffset\ =\ 0u;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ paddedRowSize\ =\ 0u;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ unpaddedRowSize\ =\ 0u;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ paddedRowSizeTMP;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *currentRowPointer;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ reader[4]\ =\ \{0u\};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ FILE\ *inputFile\ =\ fopen(fileName,\ \textcolor{stringliteral}{"{}r"{}});}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (inputFile\ !=\ NULL)}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Reading\ Pixel\ Data\ Offset\ */}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ fseek(inputFile,\ DATA\_OFFSET\_OFFSET,\ SEEK\_SET);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ fread(reader,\ 1u,\ 4u,\ inputFile);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ dataOffset\ =\ get\_bytes\_to\_read(reader);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Reading\ Image\ Width\ */}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ fseek(inputFile,\ WIDTH\_OFFSET,\ SEEK\_SET);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ fread(reader,\ 1u,\ 4u,\ inputFile);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ image-\/>width\ =\ get\_bytes\_to\_read(reader);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Reading\ Image\ Height\ */}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ fseek(inputFile,\ HEIGHT\_OFFSET,\ SEEK\_SET);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ fread(reader,\ 1u,\ 4u,\ inputFile);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ image-\/>height\ =\ get\_bytes\_to\_read(reader);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Reading\ The\ number\ of\ bits\ per\ pixel\ */}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ fseek(inputFile,\ BITS\_PER\_PIXEL\_OFFSET,\ SEEK\_SET);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ fread(reader,\ 1u,\ 2u,\ inputFile);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ bitsPerPixel\ =\ (reader[1]\ <<\ 8u)\ |\ reader[0];}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ image-\/>bytesPerPixel\ =\ ((\textcolor{keywordtype}{unsigned}\ int)bitsPerPixel)\ /\ 8u;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ paddedRowSizeTMP\ =\ (4.0f\ *\ (float)ceil((\textcolor{keywordtype}{float})(image-\/>width)\ /\ 4.0f));}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ paddedRowSize\ =\ (\textcolor{keywordtype}{unsigned}\ int)paddedRowSizeTMP\ *\ image-\/>bytesPerPixel;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ unpaddedRowSize\ =\ (image-\/>width)*(image-\/>bytesPerPixel);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ currentRowPointer\ =\ image-\/>pixels+((image-\/>height-\/1u)*unpaddedRowSize);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ image-\/>height;\ ++i)}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ fseek(inputFile,\ (i*paddedRowSize)\ +\ dataOffset,\ SEEK\_SET);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ fread(currentRowPointer,\ 1u,\ unpaddedRowSize,\ inputFile);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ currentRowPointer\ -\/=\ unpaddedRowSize;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ fclose(inputFile);}
+\DoxyCodeLine{00090\ \ \ \ \ \}\ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00091\ \ \ \ \ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Something\ went\ wrong\ */}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ return\_val\ =\ -\/1;}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00097\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image-utils_8c_ab1b01a03a98890cde4a25eae51095cc5}} 
+\index{image-\/utils.c@{image-\/utils.c}!write\_image@{write\_image}}
+\index{write\_image@{write\_image}!image-\/utils.c@{image-\/utils.c}}
+\doxysubsubsection{write\_image()}
+{\footnotesize\ttfamily int write\+\_\+image (\begin{DoxyParamCaption}\item[{char $\ast$}]{file\+Name,  }\item[{\textbf{ IMAGE} $\ast$}]{image }\end{DoxyParamCaption})}
+
+
+
+Writes the image in a .bmp format. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & File name of the image \\
+\hline
+{\em image} & to be written \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int if 0 evrery thing is OK, if -\/1 something whent wrong 
+\end{DoxyReturn}
+
+
+Definition at line \textbf{ 159} of file \textbf{ image-\/utils.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00160\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{int}\ return\_val\ =\ 0;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ writer[4]\ =\ \{0u\};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{/*\ File\ info\ */}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ BM[]\ =\ \textcolor{stringliteral}{"{}BM"{}};}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{float}\ paddedRowSizeTMP\ =\ (4.0f\ *\ (float)ceil((\textcolor{keywordtype}{float})\ image-\/>width/4.0f));}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ paddedRowSize\ =\ (\textcolor{keywordtype}{unsigned}\ int)\ paddedRowSizeTMP\ *\ image-\/>bytesPerPixel;}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fileSize\ =\ paddedRowSize*image-\/>height\ +\ HEADER\_SIZE\ +\ INFO\_HEADER\_SIZE;}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ reserved\ =\ 0x0000u;}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dataOffset\ =\ HEADER\_SIZE+INFO\_HEADER\_SIZE;}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{/*\ Header\ info\ */}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ infoHeaderSize\ =\ INFO\_HEADER\_SIZE;}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ planes\ =\ 1u;\ \textcolor{comment}{/*\ always\ 1\ */}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ bitsPerPixel\ =\ image-\/>bytesPerPixel\ *\ 8u;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ compression\ =\ NO\_COMPRESION;}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{/*\ Image\ properties\ */}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ imageSize\ =\ image-\/>width\ *\ image-\/>height\ *\ image-\/>bytesPerPixel;}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ resolutionX\ =\ 11811u;\ \textcolor{comment}{/*\ 300\ dpi\ */}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ resolutionY\ =\ 11811u;\ \textcolor{comment}{/*\ 300\ dpi\ */}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ colorsUsed\ =\ MAX\_NUMBER\_OF\_COLORS;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ importantColors\ =\ ALL\_COLORS\_REQUIRED;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ unpaddedRowSize\ =\ image-\/>width\ *\ image-\/>bytesPerPixel;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ FILE\ *outputFile\ =\ fopen(fileName,\ \textcolor{stringliteral}{"{}w"{}});}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordflow}{if}\ (outputFile\ !=\ NULL)\ }
+\DoxyCodeLine{00192\ \ \ \ \ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Write\ file\ info\ */}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ fwrite(\&BM[0],\ 1u,\ 1u,\ outputFile);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ fwrite(\&BM[1],\ 1u,\ 1u,\ outputFile);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ fileSize);}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ reserved);}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ dataOffset);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Write\ header\ info\ */}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ infoHeaderSize);}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ image-\/>width);}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ image-\/>height);}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ writer[0]\ =\ planes\ \&\ 0xFFu;}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ writer[1]\ =\ (planes\ >>\ 8)\ \&\ 0xFFu;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 2u,\ outputFile);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ writer[0]\ =\ bitsPerPixel\ \&\ 0xFFu;}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ writer[1]\ =\ (bitsPerPixel\ >>\ 8)\ \&\ 0xFFu;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 2u,\ outputFile);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Write\ compression\ */}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ compression);}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Write\ image\ size\ (in\ bytes)\ */}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ imageSize);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ resolutionX);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ resolutionY);}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ colorsUsed);}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ get\_bytes\_to\_write(writer,\ importantColors);}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ fwrite(writer,\ 1u,\ 4u,\ outputFile);}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Write\ pixels\ to\ file\ */}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0u;\ i\ <\ image-\/>height;\ ++i)}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pixelOffset\ =\ ((image-\/>height\ -\/\ i)\ -\/\ 1u)*unpaddedRowSize;}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fwrite(\&image-\/>pixels[pixelOffset],\ 1u,\ paddedRowSize,\ outputFile);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ }
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ fclose(outputFile);}
+\DoxyCodeLine{00252\ \ \ \ \ \}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keywordflow}{else}\ \{\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Something\ went\ wrong*/}}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ return\_val\ =\ -\/1;}
+\DoxyCodeLine{00256\ \ \ \ \ \}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keywordflow}{return}\ return\_val;}
+\DoxyCodeLine{00259\ \}}
+
+\end{DoxyCode}

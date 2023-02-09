@@ -1,0 +1,385 @@
+\doxysection{src/image\+\_\+segmentation.h File Reference}
+\label{image__segmentation_8h}\index{src/image\_segmentation.h@{src/image\_segmentation.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$cycle\+\_\+count.\+h$>$}\newline
+{\ttfamily \#include $<$cycles.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}image-\/utils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}led.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}kernels.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \textbf{ IMAGE\+\_\+\+HEAP\+\_\+\+INDEX}~1u
+\item 
+\#define \textbf{ IMAGE\+\_\+\+HEAP\+\_\+\+SIZE}~4000000L;
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ test\+\_\+1} (void)
+\begin{DoxyCompactList}\small\item\em Test function of images with resolution of 720x480 or less. Uses unoptimized functions. \end{DoxyCompactList}\item 
+void \textbf{ test\+\_\+2} (void)
+\begin{DoxyCompactList}\small\item\em Test function of images with resolution of 720x480 or less. Uses optimized functions. \end{DoxyCompactList}\item 
+void \textbf{ test\+\_\+1\+\_\+v2} (void)
+\item 
+void \textbf{ test\+\_\+2\+\_\+v2} (void)
+\item 
+void \textbf{ test\+\_\+720p} (void)
+\begin{DoxyCompactList}\small\item\em Test function of images with resolution of 1280x720 Uses optimized functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\label{image__segmentation_8h_a62f902520d4e89ca580dbe8f47cb7d04}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!IMAGE\_HEAP\_INDEX@{IMAGE\_HEAP\_INDEX}}
+\index{IMAGE\_HEAP\_INDEX@{IMAGE\_HEAP\_INDEX}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{IMAGE\_HEAP\_INDEX}
+{\footnotesize\ttfamily \#define IMAGE\+\_\+\+HEAP\+\_\+\+INDEX~1u}
+
+
+
+Definition at line \textbf{ 20} of file \textbf{ image\+\_\+segmentation.\+h}.
+
+\mbox{\label{image__segmentation_8h_ac752aa270a3240175b3019ae95927b6b}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!IMAGE\_HEAP\_SIZE@{IMAGE\_HEAP\_SIZE}}
+\index{IMAGE\_HEAP\_SIZE@{IMAGE\_HEAP\_SIZE}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{IMAGE\_HEAP\_SIZE}
+{\footnotesize\ttfamily \#define IMAGE\+\_\+\+HEAP\+\_\+\+SIZE~4000000L;}
+
+
+
+Definition at line \textbf{ 22} of file \textbf{ image\+\_\+segmentation.\+h}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{image__segmentation_8h_a6e89d1ed5e6dc8d3c9af00c87ed27a66}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!test\_1@{test\_1}}
+\index{test\_1@{test\_1}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{test\_1()}
+{\footnotesize\ttfamily void test\+\_\+1 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Test function of images with resolution of 720x480 or less. Uses unoptimized functions. 
+
+
+
+Definition at line \textbf{ 55} of file \textbf{ image\+\_\+segmentation.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ IMAGE\ image;}
+\DoxyCodeLine{00058\ \ \ \ \ IMAGE\ gray;}
+\DoxyCodeLine{00059\ \ \ \ \ IMAGE\ edge;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{char}\ kernel[]\ =\ \{1,\ 4,\ 1,\ 4,\ -\/20,\ 4,\ 1,\ 4,\ 1\};}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{char}\ INPUT\_IMAGE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test.bmp"{}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{char}\ OUTPUT\_IMAGE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test1\_colored.bmp"{}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ IMAGE\_HEAP\_INDEX;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ heap\_size\ =\ IMAGE\_HEAP\_SIZE;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *codes;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ image.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 4u,\ 1u);}
+\DoxyCodeLine{00070\ \ \ \ \ gray.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00071\ \ \ \ \ edge.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{int}\ *queue[2];}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ read\_image(INPUT\_IMAGE\_NAME,\ \&image);}
+\DoxyCodeLine{00077\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00078\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ for\ Reding\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ status\_led(READING\_DONE);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ convert\_to\_grayscale(\&image,\ \&gray);}
+\DoxyCodeLine{00084\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00085\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ convert\ to\ gray\ scale\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ prep\_for\_writing(\&gray,\ \&image);}
+\DoxyCodeLine{00088\ \ \ \ \ write\_image(\textcolor{stringliteral}{"{}gray1t.bmp"{}},\ \&image);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ status\_led(GRAY\_SCALE\_DONE);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ edge\_detection(\&gray,\ \&edge,\ kernel,\ 3u,\ 3u);}
+\DoxyCodeLine{00095\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00096\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ detect\ edges\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ prep\_for\_writing(\&edge,\ \&image);}
+\DoxyCodeLine{00099\ \ \ \ \ write\_image(\textcolor{stringliteral}{"{}edge1t.bmp"{}},\ \&image);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ status\_led(EDGE\_DETECT\_DONE);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{/*\ Gray\ image\ is\ no\ longer\ in\ use\ so\ we\ use\ it's\ pixel\ array\ for\ other\ things*/}}
+\DoxyCodeLine{00104\ \ \ \ \ heap\_free(index,\ gray.pixels);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ codes\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00107\ \ \ \ \ queue[0]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_malloc(index,\ image.width\ *\ image.height\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00108\ \ \ \ \ queue[1]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_malloc(index,\ image.width\ *\ image.height\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordflow}{if}\ (codes\ ==\ NULL\ ||\ queue[0]\ ==\ NULL\ ||\ queue[1]\ ==\ NULL)}
+\DoxyCodeLine{00111\ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}NO\ MEMORY!\(\backslash\)n"{}});}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00114\ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ code\_segments(\&edge,\ codes,\ queue);}
+\DoxyCodeLine{00118\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00119\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ code\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ status\_led(CODING\_DONE);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ color\_segments(\&edge,\ \&image);}
+\DoxyCodeLine{00125\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00126\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ color\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ status\_led(COLORING\_DONE);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ write\_image(OUTPUT\_IMAGE\_NAME,\ \&image);}
+\DoxyCodeLine{00132\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00133\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ write\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ status\_led(WRITING\_DONE);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ free(queue[0]);}
+\DoxyCodeLine{00138\ \ \ \ \ free(queue[1]);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ heap\_free(index,\ codes);}
+\DoxyCodeLine{00141\ \ \ \ \ heap\_free(index,\ edge.pixels);}
+\DoxyCodeLine{00142\ \ \ \ \ heap\_free(index,\ image.pixels);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image__segmentation_8h_a3d9b9c699ee829364595a6ff8b58905c}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!test\_1\_v2@{test\_1\_v2}}
+\index{test\_1\_v2@{test\_1\_v2}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{test\_1\_v2()}
+{\footnotesize\ttfamily void test\+\_\+1\+\_\+v2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{image__segmentation_8h_ad63753d95577986580dd9f1fba5ba7a7}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!test\_2@{test\_2}}
+\index{test\_2@{test\_2}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{test\_2()}
+{\footnotesize\ttfamily void test\+\_\+2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Test function of images with resolution of 720x480 or less. Uses optimized functions. 
+
+
+
+Definition at line \textbf{ 151} of file \textbf{ image\+\_\+segmentation.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00152\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ IMAGE\ image;}
+\DoxyCodeLine{00154\ \ \ \ \ IMAGE\ gray;}
+\DoxyCodeLine{00155\ \ \ \ \ IMAGE\ edge;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{char}\ kernel[]\ =\ \{1,\ 4,\ 1,\ 4,\ -\/20,\ 4,\ 1,\ 4,\ 1\};}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{char}\ FILE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test.bmp"{}};}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{char}\ OUTPUT\_IMAGE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test2\_colored.bmp"{}};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ IMAGE\_HEAP\_INDEX;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ heap\_size\ =\ IMAGE\_HEAP\_SIZE;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *codes;}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{int}\ *queue[2];}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ image.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 4u,\ 1u);}
+\DoxyCodeLine{00167\ \ \ \ \ gray.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00168\ \ \ \ \ edge.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ read\_image(FILE\_NAME,\ \&image);}
+\DoxyCodeLine{00173\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00174\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ for\ Reding\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ status\_led(READING\_DONE);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ convert\_to\_grayscale\_dsp(\&image,\ \&gray);}
+\DoxyCodeLine{00180\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00181\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ convert\ to\ gray\ scale\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ prep\_for\_writing(\&gray,\ \&image);}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ write\_image(\textcolor{stringliteral}{"{}gray2t.bmp"{}},\ \&image);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ status\_led(GRAY\_SCALE\_DONE);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ edge\_detection\_dsp(\&gray,\ \&edge,\ kernel,\ 3u,\ 3u);}
+\DoxyCodeLine{00190\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00191\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ detect\ edges\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ prep\_for\_writing(\&edge,\ \&image);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ write\_image(\textcolor{stringliteral}{"{}edge2t.bmp"{}},\ \&image);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ status\_led(EDGE\_DETECT\_DONE);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{/*\ Gray\ image\ is\ no\ longer\ in\ use\ so\ we\ use\ it's\ pixel\ array\ for\ other\ things*/}}
+\DoxyCodeLine{00199\ \ \ \ \ heap\_free(index,\ gray.pixels);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ codes\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ heap\_size\ /\ 8u,\ 1u);}
+\DoxyCodeLine{00202\ \ \ \ \ queue[0]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_calloc(index,\ image.width\ *\ image.height\ ,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00203\ \ \ \ \ queue[1]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_calloc(index,\ image.width\ *\ image.height\ ,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{if}\ (codes\ ==\ NULL\ ||\ queue[0]\ ==\ NULL\ ||\ queue[1]\ ==\ NULL)}
+\DoxyCodeLine{00205\ \ \ \ \ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}NO\ MEMORY!\(\backslash\)n"{}});}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ code\_segments\_dsp(\&edge,\ codes,\ queue);}
+\DoxyCodeLine{00213\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00214\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ code\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ status\_led(CODING\_DONE);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ color\_segments\_dsp(\&edge,\ \&image);}
+\DoxyCodeLine{00220\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00221\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ color\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ status\_led(COLORING\_DONE);}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ write\_image(OUTPUT\_IMAGE\_NAME,\ \&image);}
+\DoxyCodeLine{00227\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00228\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ write\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ status\_led(WRITING\_DONE);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ free(queue[0]);}
+\DoxyCodeLine{00233\ \ \ \ \ free(queue[1]);}
+\DoxyCodeLine{00234\ \ \ \ \ heap\_free(index,\ codes);}
+\DoxyCodeLine{00235\ \ \ \ \ heap\_free(index,\ edge.pixels);}
+\DoxyCodeLine{00236\ \ \ \ \ heap\_free(index,\ image.pixels);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \}}
+
+\end{DoxyCode}
+\mbox{\label{image__segmentation_8h_ab9c7ff9ad3b0f2ffd24a683e96495624}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!test\_2\_v2@{test\_2\_v2}}
+\index{test\_2\_v2@{test\_2\_v2}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{test\_2\_v2()}
+{\footnotesize\ttfamily void test\+\_\+2\+\_\+v2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{image__segmentation_8h_a5d9f5c0077c1a904612cf798c5825022}} 
+\index{image\_segmentation.h@{image\_segmentation.h}!test\_720p@{test\_720p}}
+\index{test\_720p@{test\_720p}!image\_segmentation.h@{image\_segmentation.h}}
+\doxysubsubsection{test\_720p()}
+{\footnotesize\ttfamily void test\+\_\+720p (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Test function of images with resolution of 1280x720 Uses optimized functions. 
+
+
+
+Definition at line \textbf{ 420} of file \textbf{ image\+\_\+segmentation.\+c}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00421\ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{comment}{/*\ It\ works\ it\ really\ works\ */}}
+\DoxyCodeLine{00423\ \ \ \ \ IMAGE\ image;}
+\DoxyCodeLine{00424\ \ \ \ \ IMAGE\ gray;}
+\DoxyCodeLine{00425\ \ \ \ \ IMAGE\ edge;}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keywordtype}{char}\ kernel[]\ =\ \{1,\ 4,\ 1,\ 4,\ -\/20,\ 4,\ 1,\ 4,\ 1\};}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keywordtype}{char}\ FILE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test720p.bmp"{}};}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keywordtype}{char}\ OUTPUT\_IMAGE\_NAME[]\ =\ \textcolor{stringliteral}{"{}test720p\_colored.bmp"{}};}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ IMAGE\_HEAP\_INDEX;}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ heap\_size\ =\ IMAGE\_HEAP\_SIZE;}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ WIDTH\ =\ 1280u;}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ HEIGHt\ =\ 720u;}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ BYTES\_PER\_PIXEL\ =\ 3u;}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *codes;}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordtype}{int}\ *queue[2];}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ image.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt\ *\ BYTES\_PER\_PIXEL,\ 1u);}
+\DoxyCodeLine{00440\ \ \ \ \ gray.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ \ WIDTH\ *\ HEIGHt,\ 1u);}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ read\_image(FILE\_NAME,\ \&image);}
+\DoxyCodeLine{00444\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00445\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ for\ Reding\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00446\ \ \ \ \ status\_led(READING\_DONE);}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ convert\_to\_grayscale\_dsp(\&image,\ \&gray);}
+\DoxyCodeLine{00450\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00451\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ convert\ to\ gray\ scale\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \ \ \ \ status\_led(GRAY\_SCALE\_DONE);}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{comment}{/*\ Little\ memory\ shuffle*/}}
+\DoxyCodeLine{00456\ \ \ \ \ heap\_free(index,\ image.pixels);}
+\DoxyCodeLine{00457\ \ \ \ \ edge.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt,\ 1u);}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ edge\_detection\_dsp(\&gray,\ \&edge,\ kernel,\ 3u,\ 3u);}
+\DoxyCodeLine{00461\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00462\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ detect\ edges\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ status\_led(EDGE\_DETECT\_DONE);}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{comment}{/*\ Gray\ image\ is\ no\ longer\ in\ use\ so\ we\ use\ it's\ pixel\ array\ for\ other\ things*/}}
+\DoxyCodeLine{00467\ \ \ \ \ heap\_free(index,\ gray.pixels);}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ codes\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt,\ 1u);}
+\DoxyCodeLine{00470\ \ \ \ \ queue[0]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt\ ,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00471\ \ \ \ \ queue[1]\ =\ (\textcolor{keywordtype}{int}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt\ ,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keywordflow}{if}\ (codes\ ==\ NULL\ ||\ queue[0]\ ==\ NULL\ ||\ queue[1]\ ==\ NULL)}
+\DoxyCodeLine{00473\ \ \ \ \ \{}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}NO\ MEMORY!\(\backslash\)n"{}});}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00476\ \ \ \ \ \}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ code\_segments\_dsp(\&edge,\ codes,\ queue);}
+\DoxyCodeLine{00480\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00481\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ code\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \ \ \ \ status\_led(CODING\_DONE);}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{comment}{/*\ Little\ memory\ shuffle*/}}
+\DoxyCodeLine{00486\ \ \ \ \ heap\_free(index,\ queue[0]);}
+\DoxyCodeLine{00487\ \ \ \ \ heap\_free(index,\ queue[1]);}
+\DoxyCodeLine{00488\ \ \ \ \ heap\_free(index,\ codes);}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ image.pixels\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)heap\_calloc(index,\ WIDTH\ *\ HEIGHt\ *\ BYTES\_PER\_PIXEL,\ 1u);}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ color\_segments\_dsp(\&edge,\ \&image);}
+\DoxyCodeLine{00494\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00495\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ color\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ status\_led(COLORING\_DONE);}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ \ \ \ \ START\_CYCLE\_COUNT(start\_count);}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ write\_image(OUTPUT\_IMAGE\_NAME,\ \&image);}
+\DoxyCodeLine{00501\ \ \ \ \ STOP\_CYCLE\_COUNT(final\_count,\ start\_count);}
+\DoxyCodeLine{00502\ \ \ \ \ PRINT\_CYCLES(\textcolor{stringliteral}{"{}Number\ of\ cycles\ to\ write\ image\ :\ "{}},\ final\_count);}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ status\_led(WRITING\_DONE);}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ heap\_free(index,\ edge.pixels);}
+\DoxyCodeLine{00507\ \ \ \ \ heap\_free(index,\ image.pixels);}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,25 @@
+\doxysection{Image segmentation using the edge detection algorithm on the ADSP-\/21489 development platform}\label{index_autotoc_md0}
+\doxysubsection{Basic overview of the project}\label{index_autotoc_md1}
+
+\begin{DoxyItemize}
+\item An image in .bmp format is loaded onto the ADSP-\/21489 development platform, which is then converted to gray scale image.
+\item Then edge detection is done using 2D convolution and Laplacian operator (i.\+e. the second derivative of the signal)
+\item After the edges are detected in the image, it is then coded and colored so that each closed contour has its own code, that is, each contour is colored with a separate color. The coloring principle is based on the flood fill algorithm that uses BFS searches to find a closed contour.
+\item You can track the process of segmentation on the included LED loading bar on the board.
+\end{DoxyItemize}\doxysubsection{Developer board}\label{index_autotoc_md2}
+The board is a {\itshape Analog Devices} {\bfseries{ADSP-\/21489}} {\itshape rev. 0.\+2} from the {\itshape SHARC} family. ~\newline
+ {\texttt{ From more info}}\doxysubsection{Compile and run}\label{index_autotoc_md3}
+The simplest way to compile and run the program is to use {\itshape Cross\+Core Embedded Studio}. The {\itshape \doxyref{image\+\_\+segmentation.\+c}{p.}{image__segmentation_8c}} contaist test function that you can use. The image that you want to test needs to be in the {\itshape Debug} directory.\doxysubsection{Provided files}\label{index_autotoc_md4}
+The codebase has the following files\+:
+\begin{DoxyItemize}
+\item {\bfseries{\doxyref{image\+\_\+segmentation.\+c}{p.}{image__segmentation_8c}}} (Contains the main and test function)
+\item {\bfseries{\doxyref{image-\/utils.\+c}{p.}{image-utils_8c}}} (Cointns function for image manipulation)
+\item {\bfseries{\doxyref{led.\+c}{p.}{led_8c}}} (Cointns function for LED manipulation on the board)
+\item {\bfseries{\doxyref{kernels.\+h}{p.}{kernels_8h}}} (Cointns kernel examples of edge detection)
+\item {\bfseries{slika.\+h}} (An image in the form of a .h file)
+\item {\bfseries{convertor.\+c}} (Converst an image from .bmp format to a .h file) ~\newline
+
+\item {\bfseries{doc/}} (In the doc diretory you can find documentation on all the provided functions)
+\end{DoxyItemize}
+
+{\bfseries{NOTE\+:}} For the love of GOD and all that is holy DON\textquotesingle{}T use this board and especially DON\textquotesingle{}T use this IDE. 

@@ -1,0 +1,84 @@
+\doxysection{image-\/utils.h}
+\label{image-utils_8h_source}\index{src/image-\/utils.h@{src/image-\/utils.h}}
+\textbf{ Go to the documentation of this file.}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ image-\/loader.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ 30.12.2022.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ Aleksandar\ Beslic}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ \ \ \ \ email:\ beslic.alex@gmail.com}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ IMAGE\_UTILS\_H\_}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ IMAGE\_UTILS\_H\_}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <builtins.h>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ For\ use\ with\ BMP\ format\ images\ */}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ DATA\_OFFSET\_OFFSET\ 0x000AL}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ WIDTH\_OFFSET\ 0x0012L}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ HEIGHT\_OFFSET\ 0x0016L}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ BITS\_PER\_PIXEL\_OFFSET\ 0x001CL}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ HEADER\_SIZE\ 14u}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ INFO\_HEADER\_SIZE\ 40u}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ NO\_COMPRESION\ 0u}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ MAX\_NUMBER\_OF\_COLORS\ 0u}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ ALL\_COLORS\_REQUIRED\ 0u}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ Color\ definition\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ NUM\_COLORS\ 11u}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ COLOR\_1\ 0x3AAFA9u}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ COLOR\_2\ 0xDEE2E1u}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ COLOR\_3\ 0xFFE33Au}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ COLOR\_4\ 0xDA7B93u}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ COLOR\_5\ 0x2F4454u}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ COLOR\_6\ 0xFFCC77u}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ COLOR\_7\ 0xFF2255u}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ COLOR\_8\ 0xD0F2C7u}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ COLOR\_9\ 0x60F2F7u}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ COLOR\_10\ 0x5F236Bu}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ Macro\ function\ definition\ for\ extracting\ individual\ RGB\ values\ */}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ C\_MASK\_R(COLOR)\ (((COLOR)\ >>\ 16u)\ \&\ 0xffu)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ C\_MASK\_G(COLOR)\ (((COLOR)\ >>\ 8u)\ \&\ 0xffu)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ C\_MASK\_B(COLOR)\ ((COLOR)\ \&\ 0xffu)}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{/*\ Image\ strutter\ definition\ */}}
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }img}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ width;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ height;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ bytesPerPixel;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pixels;}
+\DoxyCodeLine{00056\ \}\ IMAGE;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ read\_image(\textcolor{keywordtype}{char}\ *fileName,\ IMAGE\ *image);}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{int}\ write\_image(\textcolor{keywordtype}{char}\ *fileName,\ IMAGE\ *image);}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{void}\ prep\_for\_writing(IMAGE\ *input,\ IMAGE\ *output);}
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ get\_bytes\_to\_read(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ array[4]);}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ get\_bytes\_to\_write(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ array[4],\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ whatTowrite);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keywordtype}{void}\ convert\_to\_grayscale(IMAGE\ *originalImage,\ IMAGE\ *grayscaleImage);}
+\DoxyCodeLine{00065\ \textcolor{keywordtype}{void}\ edge\_detection(IMAGE\ *input,\ IMAGE\ *output,\ \textcolor{keywordtype}{char}\ *kernel,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k\_row,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k\_col);}
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{void}\ flood\_fill(IMAGE\ *image,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ color,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *codes,\ \textcolor{keywordtype}{int}\ *queue[2]);}
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{void}\ color\_segments(IMAGE\ *input,\ IMAGE\ *output);}
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{void}\ code\_segments(IMAGE\ *image,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *codes,\ \textcolor{keywordtype}{int}\ *queue[2]);}
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{void}\ color\_pixel(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pixels,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ color\_index);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{void}\ convert\_to\_grayscale\_dsp(IMAGE\ *originalImage,\ IMAGE\ *grayscaleImage);}
+\DoxyCodeLine{00073\ \textcolor{keywordtype}{void}\ edge\_detection\_dsp(IMAGE\ *input,\ IMAGE\ *output,\ \textcolor{keywordtype}{char}\ *\ restrict\ kernel,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k\_row,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k\_col);}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{void}\ flood\_fill\_dsp(IMAGE\ *image,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ x,\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ y,\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ color,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ codes,\ \textcolor{keywordtype}{int}\ *queue[2]);}
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{void}\ color\_segments\_dsp(IMAGE\ *input,\ IMAGE\ *output);}
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{void}\ code\_segments\_dsp(IMAGE\ *image,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\ restrict\ codes,\ \textcolor{keywordtype}{int}\ *queue[2]);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ IMAGE\_UTILS\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

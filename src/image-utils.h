@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <builtins.h>
+
 /* For use with BMP format images */
 #define DATA_OFFSET_OFFSET 0x000AL
 #define WIDTH_OFFSET 0x0012L
@@ -25,7 +27,7 @@
 #define MAX_NUMBER_OF_COLORS 0u
 #define ALL_COLORS_REQUIRED 0u
 
-/* Color defenition */
+/* Color definition */
 #define NUM_COLORS 11u
 #define COLOR_1 0x3AAFA9u
 #define COLOR_2 0xDEE2E1u
@@ -38,14 +40,14 @@
 #define COLOR_9 0x60F2F7u
 #define COLOR_10 0x5F236Bu
 
-/* Macro function defenition for extracting individual RGB values */
+/* Macro function definition for extracting individual RGB values */
 #define C_MASK_R(COLOR) (((COLOR) >> 16u) & 0xffu)
 #define C_MASK_G(COLOR) (((COLOR) >> 8u) & 0xffu)
 #define C_MASK_B(COLOR) ((COLOR) & 0xffu)
 
 
-/* Image structer defenition */
-typedef struct image
+/* Image strutter definition */
+typedef struct img
 {
 	unsigned int width;
 	unsigned int height;
@@ -55,11 +57,22 @@ typedef struct image
 
 int read_image(char *fileName, IMAGE *image);
 int write_image(char *fileName, IMAGE *image);
+void prep_for_writing(IMAGE *input, IMAGE *output);
+unsigned int get_bytes_to_read(unsigned char array[4]);
+void get_bytes_to_write(unsigned char array[4], unsigned int whatTowrite);
+
 void convert_to_grayscale(IMAGE *originalImage, IMAGE *grayscaleImage);
 void edge_detection(IMAGE *input, IMAGE *output, char *kernel, unsigned int k_row, unsigned int k_col);
-void flood_fill(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned int *codes);
+void flood_fill(IMAGE *image, unsigned int x, unsigned int y, unsigned int color, unsigned char *codes, int *queue[2]);
 void color_segments(IMAGE *input, IMAGE *output);
-void code_segments(IMAGE *image);
+void code_segments(IMAGE *image, unsigned char *codes, int *queue[2]);
 void color_pixel(unsigned char *pixels, unsigned int color_index);
+
+
+void convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage);
+void edge_detection_dsp(IMAGE *input, IMAGE *output, char * restrict kernel, unsigned int k_row, unsigned int k_col);
+void flood_fill_dsp(IMAGE *image, unsigned int x,unsigned int y,unsigned int color, unsigned char * restrict codes, int *queue[2]);
+void color_segments_dsp(IMAGE *input, IMAGE *output);
+void code_segments_dsp(IMAGE *image, unsigned char * restrict codes, int *queue[2]);
 
 #endif /* IMAGE_UTILS_H_ */

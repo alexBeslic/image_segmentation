@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['c_5fmask_5fb_0',['C_MASK_B',['../image-utils_8h.html#a55c96985dff090b04400dd6d15eb4862',1,'image-utils.h']]],
+  ['c_5fmask_5fg_1',['C_MASK_G',['../image-utils_8h.html#a5ffcf7cba5025d4ef682ae6fbb8eef39',1,'image-utils.h']]],
+  ['c_5fmask_5fr_2',['C_MASK_R',['../image-utils_8h.html#ab3e14682ca9fa9b4e165f177fa81ab9e',1,'image-utils.h']]],
+  ['code_5fsegments_3',['code_segments',['../image-utils_8c.html#a0c3902d5e609ce53f3884056184aba89',1,'code_segments(IMAGE *image, unsigned char *codes, int *queue[2]):&#160;image-utils.c'],['../image-utils_8h.html#a0c3902d5e609ce53f3884056184aba89',1,'code_segments(IMAGE *image, unsigned char *codes, int *queue[2]):&#160;image-utils.c']]],
+  ['code_5fsegments_5fdsp_4',['code_segments_dsp',['../image-utils_8c.html#afe5845eb3e6ff0bace183a1f6ce57d67',1,'code_segments_dsp(IMAGE *image, unsigned char *restrict codes, int *queue[2]):&#160;image-utils.c'],['../image-utils_8h.html#afe5845eb3e6ff0bace183a1f6ce57d67',1,'code_segments_dsp(IMAGE *image, unsigned char *restrict codes, int *queue[2]):&#160;image-utils.c']]],
+  ['coding_5fdone_5',['CODING_DONE',['../led_8h.html#ab6bf9fd1ef3b47b5608d0562e1ace8f3a281dd0e93bf526c20182e24b6b660ba7',1,'led.h']]],
+  ['color_5f1_6',['COLOR_1',['../image-utils_8h.html#a676619736889a273fce9b18d7ccac048',1,'image-utils.h']]],
+  ['color_5f10_7',['COLOR_10',['../image-utils_8h.html#a75c80f3f02b9b0927a8d015aebb7af10',1,'image-utils.h']]],
+  ['color_5f2_8',['COLOR_2',['../image-utils_8h.html#af50df7682bfb42fb3fdc05dda5f672bd',1,'image-utils.h']]],
+  ['color_5f3_9',['COLOR_3',['../image-utils_8h.html#a400aa90eafe2d8877408bd48ffff7d59',1,'image-utils.h']]],
+  ['color_5f4_10',['COLOR_4',['../image-utils_8h.html#a628e4a42e914c7ecc3e0e8da7a8d6a43',1,'image-utils.h']]],
+  ['color_5f5_11',['COLOR_5',['../image-utils_8h.html#a19e93b1b5f86fec1bd4aa0426e0a543d',1,'image-utils.h']]],
+  ['color_5f6_12',['COLOR_6',['../image-utils_8h.html#a345cffa502a59abfe12cf776dd9d11fa',1,'image-utils.h']]],
+  ['color_5f7_13',['COLOR_7',['../image-utils_8h.html#a54af7554bdd424e5adf70a40747cb867',1,'image-utils.h']]],
+  ['color_5f8_14',['COLOR_8',['../image-utils_8h.html#a8da468472b97f818a9951be11ef8c9fd',1,'image-utils.h']]],
+  ['color_5f9_15',['COLOR_9',['../image-utils_8h.html#aff1d05cb2a0f78bb204a308d58e553bb',1,'image-utils.h']]],
+  ['color_5fpixel_16',['color_pixel',['../image-utils_8c.html#a2f54c39e61cc3f188ec5b3ada7632e85',1,'color_pixel(unsigned char *pixels, unsigned int color_index):&#160;image-utils.c'],['../image-utils_8h.html#a2f54c39e61cc3f188ec5b3ada7632e85',1,'color_pixel(unsigned char *pixels, unsigned int color_index):&#160;image-utils.c']]],
+  ['color_5fsegments_17',['color_segments',['../image-utils_8c.html#a26338f8e90d17d00f531c22cac0f2a92',1,'color_segments(IMAGE *input, IMAGE *output):&#160;image-utils.c'],['../image-utils_8h.html#a26338f8e90d17d00f531c22cac0f2a92',1,'color_segments(IMAGE *input, IMAGE *output):&#160;image-utils.c']]],
+  ['color_5fsegments_5fdsp_18',['color_segments_dsp',['../image-utils_8c.html#a09305e985b71cc1c8301c01f49a91cf6',1,'color_segments_dsp(IMAGE *input, IMAGE *output):&#160;image-utils.c'],['../image-utils_8h.html#a09305e985b71cc1c8301c01f49a91cf6',1,'color_segments_dsp(IMAGE *input, IMAGE *output):&#160;image-utils.c']]],
+  ['coloring_5fdone_19',['COLORING_DONE',['../led_8h.html#ab6bf9fd1ef3b47b5608d0562e1ace8f3a7361c535cc713af3d9acdf453db0f259',1,'led.h']]],
+  ['convert_5fto_5fgrayscale_20',['convert_to_grayscale',['../image-utils_8c.html#af135e1431c0a191681c41197210cc8ae',1,'convert_to_grayscale(IMAGE *originalImage, IMAGE *grayscaleImage):&#160;image-utils.c'],['../image-utils_8h.html#af135e1431c0a191681c41197210cc8ae',1,'convert_to_grayscale(IMAGE *originalImage, IMAGE *grayscaleImage):&#160;image-utils.c']]],
+  ['convert_5fto_5fgrayscale_5fdsp_21',['convert_to_grayscale_dsp',['../image-utils_8c.html#acee8d1cc8531e00c7a15cdd9e0203fbe',1,'convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage):&#160;image-utils.c'],['../image-utils_8h.html#acee8d1cc8531e00c7a15cdd9e0203fbe',1,'convert_to_grayscale_dsp(IMAGE *originalImage, IMAGE *grayscaleImage):&#160;image-utils.c']]]
+];

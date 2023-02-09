@@ -1,0 +1,28 @@
+\doxysection{led.\+h}
+\label{led_8h_source}\index{src/led.h@{src/led.h}}
+\textbf{ Go to the documentation of this file.}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ led.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ Created\ on:\ 03.01.2023.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ Aleksandar\ Beslic}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ \ \ \ \ email:\ beslic.alex@gmail.com}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ LED\_H\_}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ LED\_H\_}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <def21489.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <sru21489.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <SYSREG.h>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{/*\ Used\ in\ combination\ with\ status\_led()\ */}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{enum}\ PROCESS\_DONE\ \{READING\_DONE,\ GRAY\_SCALE\_DONE,\ EDGE\_DETECT\_DONE,\ CODING\_DONE,\ COLORING\_DONE,\ WRITING\_DONE\};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ init\_led(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ status\_led(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ what\_led);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ LED\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}
